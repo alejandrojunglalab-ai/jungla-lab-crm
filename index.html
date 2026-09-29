@@ -1,0 +1,1600 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Jungla Lab · CRM</title>
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f3ee;--surface:#fbfaf6;--surface2:#eeebe3;--line:#ddd8cc;--line2:#e8e4da;
+  --ink:#1e231f;--ink2:#555c55;--ink3:#80867c;
+  --accent:#2f6b4f;--accent-ink:#fbfaf6;
+  --lead:#2f63a8;--mql:#c08f12;--sql:#b8432e;--venta:#2f7a50;--proy:#6a4f9c;--lost:#8a8578;
+  --ok:#2f7a50;--warn:#a87a0c;--crit:#b3261e;--info:#2f63a8;
+  --shadow:0 10px 30px rgba(40,36,24,.14);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#151815;--surface:#1c201c;--surface2:#262b26;--line:#343b34;--line2:#2b312b;
+  --ink:#ebeae3;--ink2:#a8ada3;--ink3:#7f857a;
+  --accent:#6fb58f;--accent-ink:#10140f;
+  --lead:#5b8fd6;--mql:#ae8420;--sql:#e2575a;--venta:#4fa274;--proy:#9474d0;--lost:#8f8b80;
+  --ok:#6fb58f;--warn:#e0b04a;--crit:#f07466;--info:#7ea9dc;--shadow:0 10px 30px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#151815;--surface:#1c201c;--surface2:#262b26;--line:#343b34;--line2:#2b312b;
+  --ink:#ebeae3;--ink2:#a8ada3;--ink3:#7f857a;
+  --accent:#6fb58f;--accent-ink:#10140f;
+  --lead:#5b8fd6;--mql:#ae8420;--sql:#e2575a;--venta:#4fa274;--proy:#9474d0;--lost:#8f8b80;
+  --ok:#6fb58f;--warn:#e0b04a;--crit:#f07466;--info:#7ea9dc;--shadow:0 10px 30px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:var(--serif);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.01em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100%}
+.side{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;display:flex;flex-direction:column;gap:16px;padding:22px 14px;border-right:1px solid var(--line);background:var(--surface);overflow-y:auto}
+.brand{display:flex;flex-direction:column;gap:2px;padding:0 8px}
+.brand b{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:-.02em}
+.brand b i{font-style:normal;color:var(--accent)}
+.brand span{font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.navlist{display:flex;flex-direction:column;gap:2px}
+.navsep{height:1px;background:var(--line);margin:8px 6px}
+.navbtn{display:flex;align-items:center;gap:10px;justify-content:space-between;width:100%;background:none;border:0;border-radius:7px;padding:8px 10px;text-align:left;cursor:pointer;color:var(--ink2);font-weight:500;white-space:nowrap}
+.navbtn:hover{background:var(--surface2);color:var(--ink)}
+.navbtn[aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
+.navbtn .cnt{font:500 11px var(--mono);opacity:.75}
+.navbtn .cnt.alert{color:var(--crit);opacity:1}
+.navbtn[aria-current="page"] .cnt.alert{color:var(--accent-ink)}
+.side-foot{margin-top:auto;padding:10px;border:1px dashed var(--line);border-radius:8px;font-size:12px;color:var(--ink2)}
+.side-foot b{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink3);display:block;margin-bottom:3px}
+
+.main{padding-inline:28px;padding-block:26px 60px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.pagehead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 24px}
+.pagehead h1{font-size:30px;line-height:1.1}
+.eyebrow{margin:0 0 6px;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.meta{margin:0;color:var(--ink3);font-size:12px}
+.rules{display:flex;flex-wrap:wrap;gap:6px}
+.rule{font:12px var(--mono);color:var(--ink2);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-top:-6px}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:8px 14px 9px;margin-bottom:-1px;cursor:pointer;color:var(--ink2);font-weight:500}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kpi{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.kpi .lab{font:500 10.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)}
+.kpi .val{font:500 23px/1.1 var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .foot{font-size:11.5px;color:var(--ink2)}
+.sim{font:10px var(--mono);color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-left:4px;letter-spacing:.04em}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px}
+.grid2e{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel-h{display:flex;align-items:baseline;justify-content:space-between;gap:4px 10px;flex-wrap:wrap}
+.panel-h h2{font-size:18px}
+.panel-h p{margin:0;font-size:12px;color:var(--ink3)}
+
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:2px;background:var(--c)}
+.funnel{display:grid;grid-template-columns:132px 1fr 1fr;gap:8px 14px;align-items:center}
+.funnel .fh{font:500 10.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)}
+.funnel .fl{font-size:13px;font-weight:500;display:flex;align-items:center;gap:7px}
+.funnel .fl i{width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+.bar{position:relative;height:22px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar b{position:absolute;inset:0 auto 0 0;background:var(--c);opacity:.85;border-radius:0 4px 4px 0}
+.bar.v b{opacity:.35}
+.bar span{position:absolute;left:8px;top:50%;transform:translateY(-50%);font:500 12px var(--mono);color:var(--ink)}
+
+/* charts */
+.hb{display:flex;flex-direction:column;gap:7px}
+.hb-row{display:grid;grid-template-columns:minmax(90px,150px) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:12.5px}
+.hb-l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink2)}
+.hb-t{position:relative;height:14px;background:var(--surface2);border-radius:0 4px 4px 0}
+.hb-t b{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0;max-width:100%}
+.hb-t i{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);border-radius:1px;box-shadow:0 0 0 2px var(--surface)}
+.hb-v{font-size:12px;color:var(--ink);white-space:nowrap;text-align:right;min-width:56px}
+.vb svg{width:100%;height:auto;display:block}
+.vb .ax{fill:var(--ink3);font:11px var(--mono)}
+.vb .axv{fill:var(--ink);font:500 11px var(--mono)}
+.vb .grid{stroke:var(--line2);stroke-width:1}
+.vb .base{stroke:var(--line);stroke-width:1}
+.chart-note{font-size:11.5px;color:var(--ink3);margin:0}
+.tip{position:fixed;z-index:80;pointer-events:none;background:var(--ink);color:var(--bg);font:12px var(--mono);padding:5px 8px;border-radius:6px;max-width:280px;box-shadow:var(--shadow)}
+
+.feed,.cps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.feed li{display:grid;grid-template-columns:74px minmax(0,1fr);gap:10px;padding:9px 0;border-top:1px solid var(--line2)}
+.feed li:first-child{border-top:0}
+.feed .when{font:11.5px var(--mono);color:var(--ink3);padding-top:2px}
+.feed .ag{display:inline-flex;align-items:center;gap:6px;font:500 11px var(--mono);color:var(--ink2);margin-bottom:2px}
+.feed .ag::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--c)}
+.feed p{margin:0;font-size:13px}
+.cps li{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line2)}
+.cps li:first-child{border-top:0}
+.cps .ct{display:flex;flex-direction:column;gap:2px;min-width:0}
+.cps .ct b{font-weight:600;font-size:13px}
+.cps .ct span{font-size:12px;color:var(--ink2)}
+
+.pill{--c:var(--ink3);display:inline-flex;align-items:center;gap:6px;font:500 11.5px var(--mono);color:var(--ink);background:color-mix(in srgb,var(--c) 12%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c)}
+.pill.plain::before{display:none}
+.ph-lead{--c:var(--lead)}.ph-mql{--c:var(--mql)}.ph-sql{--c:var(--sql)}.ph-venta{--c:var(--venta)}.ph-proy{--c:var(--proy)}.ph-lost{--c:var(--lost)}
+.chip{--c:var(--ink3);display:inline-flex;align-items:center;gap:5px;font:500 11px var(--mono);color:var(--ink);background:color-mix(in srgb,var(--c) 12%,transparent);border-radius:4px;padding:2px 6px;white-space:nowrap}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c)}
+.chip.ok{--c:var(--ok)}.chip.warn{--c:var(--warn)}.chip.crit{--c:var(--crit)}.chip.info{--c:var(--info)}.chip.mute{--c:var(--ink3)}
+.test{font:500 9.5px var(--mono);letter-spacing:.08em;color:var(--ink3);border:1px solid var(--line);border-radius:3px;padding:0 4px;line-height:15px;flex:none}
+
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:7px;padding:6px 12px;font-weight:500;font-size:13px;cursor:pointer;white-space:nowrap}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.sm{padding:3px 9px;font-size:12px}
+.btn.danger{background:var(--crit);border-color:var(--crit);color:#fff}
+.link{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font-weight:500;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 40%,transparent);text-underline-offset:2px;text-align:left}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters input,.filters select,.fld select,.fld input,.np input,.np select,.cfg input,.cfg select{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:6px 10px;min-width:0}
+.filters input[type=search]{width:min(280px,100%)}
+.filters label{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--ink2)}
+.count{font:12px var(--mono);color:var(--ink3);margin-left:auto}
+
+.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:10px;align-items:flex-start}
+.col{flex:0 0 262px;background:var(--surface2);border:1px solid var(--line2);border-radius:10px;display:flex;flex-direction:column;max-height:calc(100vh - 250px);min-height:200px;transition:border-color .15s}
+.col.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--surface2))}
+.colhead{--c:var(--ink3);padding:11px 12px 9px;border-bottom:2px solid var(--c);display:grid;grid-template-columns:auto 1fr auto;gap:2px 8px;align-items:center}
+.colhead .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.colhead h3{font:600 13px var(--sans);letter-spacing:0}
+.colhead .n{font-size:12px;color:var(--ink2)}
+.colhead .colmeta{grid-column:2/4;font-size:11px;color:var(--ink3)}
+.colbody{padding:8px;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 11px;display:flex;flex-direction:column;gap:6px;cursor:grab;transition:box-shadow .15s}
+.card:hover{box-shadow:var(--shadow)}
+.card.dragging{opacity:.45}
+.card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.card-top strong{font-size:13px;line-height:1.3}
+.card-sub{font-size:12px;color:var(--ink2)}
+.card-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card-row .val{font-weight:500;font-size:13px}
+.score{font:500 11px var(--mono);border-radius:4px;padding:1px 6px;background:var(--surface2);color:var(--ink2)}
+.score.hi{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ink)}
+.card-next{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--ink2);border-top:1px dashed var(--line);padding-top:6px}
+.card-next .mono{color:var(--ink3);flex:none}
+.card-next .late{color:var(--crit)}
+.alerts{display:flex;flex-wrap:wrap;gap:4px}
+.empty{color:var(--ink3);font-size:12px;text-align:center;margin:18px 0}
+
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{font:500 10.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface)}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--line2);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr.row{cursor:pointer}
+.tbl tr.row:hover td{background:var(--surface2)}
+.tbl .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl .nm{font-weight:500}
+.tbl .sm{font-size:12px;color:var(--ink2)}
+.panel .tblwrap{border-radius:8px}
+.nowrap{white-space:nowrap}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat .lab{font:500 10.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)}
+.stat .val{font:500 20px var(--mono);margin-top:3px}
+.stat .foot{font-size:11.5px;color:var(--ink2);margin-top:2px}
+.ladder{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--ink2)}
+
+.pboard{display:grid;grid-template-columns:repeat(4,minmax(230px,1fr));gap:12px;overflow-x:auto;padding-bottom:6px}
+.pcol{background:var(--surface2);border:1px solid var(--line2);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:8px}
+.pcol h3{font:600 13px var(--sans);padding:4px 4px 6px;border-bottom:2px solid var(--proy);display:flex;justify-content:space-between}
+.pcard{cursor:pointer}
+.prog{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.prog b{display:block;height:100%;background:var(--proy)}
+.sem{display:inline-flex;align-items:center;gap:6px;font:500 11.5px var(--mono)}
+.sem i{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 20%,transparent)}
+.sem.g{--c:var(--ok)}.sem.a{--c:var(--warn)}.sem.r{--c:var(--crit)}
+.riskflag{font-size:12px;color:var(--crit);display:flex;flex-direction:column;gap:2px;border-top:1px dashed var(--line);padding-top:6px}
+.riskflag b{font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+
+/* configuración */
+.cfggrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.cfg{display:flex;flex-direction:column;gap:0}
+.cfg-row{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line2)}
+.cfg-row:first-child{border-top:0}
+.cfg-row b{display:block;font-weight:500;font-size:13px}
+.cfg-row span{display:block;font-size:12px;color:var(--ink2)}
+.cfg-row input[type=number]{width:100%;text-align:right;font-family:var(--mono)}
+.cfg-row input[type=url]{width:100%;font:12px var(--mono)}
+a.btn{text-decoration:none}a.link{font-size:12.5px;white-space:nowrap}
+.dsec .gate h3{margin:0}
+.cfg-row .unit{font:11px var(--mono);color:var(--ink3);text-align:right}
+.sw{display:flex;justify-content:flex-end}
+.sw input{width:18px;height:18px;accent-color:var(--accent)}
+.integ{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line2);font-size:13px}
+.integ:first-child{border-top:0}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,22,18,.35);z-index:30}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--bg);border-left:1px solid var(--line);z-index:31;overflow-y:auto;box-shadow:var(--shadow);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.dh{padding:20px 22px 14px;border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:2}
+.dh-top{display:flex;gap:8px;align-items:center}
+.dh-top .x{margin-left:auto;background:none;border:1px solid var(--line);border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:18px;line-height:1;color:var(--ink2)}
+.dh h2{font-size:22px;margin-top:10px}
+.dh-sub{margin:4px 0 0;color:var(--ink2);font-size:13px}
+.dsec{padding:16px 22px;border-bottom:1px solid var(--line2);display:flex;flex-direction:column;gap:10px}
+.dsec h3{font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 16px;margin:0}
+.facts div{display:flex;flex-direction:column;gap:1px;min-width:0}
+.facts dt{font:10.5px var(--mono);color:var(--ink3);letter-spacing:.04em}
+.facts dd{margin:0;font-size:13px;font-weight:500;overflow-wrap:anywhere}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink2)}
+.stagebar{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.bant{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bk{display:grid;grid-template-columns:auto auto 1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;background:var(--surface)}
+.bk.on{border-color:color-mix(in srgb,var(--ok) 50%,transparent);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
+.bk input{accent-color:var(--accent);margin:0}
+.bk .bl{font-weight:600;color:var(--accent)}
+.bk .pts{font-size:11px;color:var(--ink3)}
+.gates{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.gate{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.agents{display:flex;flex-wrap:wrap;gap:6px}
+.agent{--c:var(--ink3);font:500 11.5px var(--mono);border:1px dashed var(--line);color:var(--ink3);border-radius:6px;padding:4px 8px}
+.agent.on{border-style:solid;border-color:color-mix(in srgb,var(--c) 45%,transparent);color:var(--ink);background:color-mix(in srgb,var(--c) 10%,transparent)}
+.agent.off{text-decoration:line-through}
+.agent small{display:block;font:11px var(--sans);color:var(--ink2);margin-top:1px}
+.tl{list-style:none;margin:0;padding:0;border-left:1px solid var(--line);margin-left:4px}
+.tl li{position:relative;padding:0 0 12px 16px;font-size:13px}
+.tl li::before{content:"";position:absolute;left:-4px;top:5px;width:7px;height:7px;border-radius:50%;background:var(--c,var(--ink3))}
+.tl .when{font:11px var(--mono);color:var(--ink3);display:block}
+.np{border:1px dashed var(--line);border-radius:8px;padding:10px 12px;background:var(--surface)}
+.np summary{cursor:pointer;font-weight:500;color:var(--accent)}
+.np-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:10px}
+.np label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink2)}
+.np .full{grid-column:1/-1}
+.appr{margin:0;font-size:12.5px}
+.note{font-size:12px;color:var(--ink2);margin:0}
+.lossbox{border:1px solid color-mix(in srgb,var(--lost) 40%,transparent);background:color-mix(in srgb,var(--lost) 8%,transparent);border-radius:8px;padding:10px 12px;font-size:13px}
+
+/* modal */
+.mscrim{position:fixed;inset:0;background:rgba(20,22,18,.45);z-index:50;display:grid;place-items:center;padding:16px}
+.modal{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);width:min(480px,100%);max-height:90vh;overflow:auto}
+.modal header{padding:16px 18px 0}
+.modal header .eyebrow{margin-bottom:4px}
+.modal h2{font-size:19px}
+.modal .mb{padding:12px 18px;font-size:13.5px;display:flex;flex-direction:column;gap:10px}
+.modal .mb p{margin:0}
+.modal footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px 16px;border-top:1px solid var(--line2)}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opts label{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:7px;padding:7px 10px;cursor:pointer}
+.opts input{accent-color:var(--accent)}
+.err{color:var(--crit);font-size:12.5px;min-height:1em}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:13px;z-index:60;box-shadow:var(--shadow);max-width:calc(100% - 32px)}
+
+/* formularios */
+.modal.wide{width:min(680px,100%)}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.ff{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink2);min-width:0}
+.ff.full,.fsec{grid-column:1/-1}
+.ff input,.ff select,.ff textarea{background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:7px 10px;font:inherit;font-size:13.5px;color:var(--ink);min-width:0;width:100%}
+.ff textarea{resize:vertical}
+.fsec{margin:6px 0 0;font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);border-top:1px solid var(--line2);padding-top:10px}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label,.chk{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:7px;padding:5px 9px;font-size:12.5px;color:var(--ink);cursor:pointer;background:var(--bg)}
+.checks input,.chk input{accent-color:var(--accent);width:auto}
+.dactions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.headr{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end}
+.tsel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:12px}
+.savestate b{color:var(--ink3)}
+.savestate.ok b{color:var(--ok)}.savestate.busy b{color:var(--warn)}.savestate.err b{color:var(--crit)}
+.empty-state{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+@media (max-width:1180px){.grid2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1000px){.grid2e,.cfggrid{grid-template-columns:1fr}}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{height:auto;flex-direction:row;align-items:center;gap:12px;padding:10px 16px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto;z-index:20}
+  .brand span,.navsep{display:none}
+  .side-foot{margin:0;padding:4px 8px;flex:none;white-space:nowrap}.side-foot span{display:none}.side-foot b{margin:0}
+  .fgrid{grid-template-columns:1fr}
+  .navlist{flex-direction:row}
+  .navbtn .cnt{display:none}
+  .main{padding-inline:16px;padding-block:18px 50px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .col{max-height:none}
+  .funnel{grid-template-columns:100px 1fr 1fr;gap:6px 8px}
+  .bant{grid-template-columns:1fr}
+  .dh,.dsec{padding-inline:16px}
+  .hb-row{grid-template-columns:minmax(70px,110px) minmax(0,1fr) auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><b>Jungla<i>.</i>Lab</b><span>Intranet comercial</span></div>
+    <nav class="navlist" id="nav" aria-label="Módulos"></nav>
+    <div class="side-foot savestate" id="savestate" role="status"></div>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+<div id="drawerRoot"></div>
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+/* ---------- utilidades ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const R=mulberry32(20260925);
+const pick=a=>a[Math.floor(R()*a.length)];
+const rint=(a,b)=>a+Math.floor(R()*(b-a+1));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ascii=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'');
+const pad=(n,l=2)=>String(n).padStart(l,'0');
+const sum=(a,f=x=>x)=>a.reduce((t,x)=>t+f(x),0);
+const avg=(a,f=x=>x)=>a.length?sum(a,f)/a.length:0;
+const DAY=864e5,HOUR=36e5;
+const NOW=new Date();
+const TODAY=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate());
+const dOff=n=>new Date(TODAY.getTime()+n*DAY);
+const sod=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
+const daysBetween=(a,b)=>Math.round((sod(b)-sod(a))/DAY);
+const FX0=3.75;
+const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const fmtD=d=>d?`${d.getDate()} ${MES[d.getMonth()]}`:'—';
+const fmtDY=d=>d?`${d.getDate()} ${MES[d.getMonth()]} ${d.getFullYear()}`:'—';
+const relD=d=>{const n=daysBetween(TODAY,d);if(n===0)return'hoy';if(n===1)return'mañana';if(n===-1)return'ayer';return n>0?`en ${n} d`:`hace ${-n} d`};
+const relT=d=>{const m=(NOW-d)/6e4;if(m<60)return`hace ${Math.max(1,Math.round(m))} min`;if(m<1440)return`hace ${Math.round(m/60)} h`;return`hace ${Math.round(m/1440)} d`};
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+const monthKey=d=>d.getFullYear()*12+d.getMonth();
+function lastMonths(n,fwd=0){const r=[];for(let i=n-1;i>=-fwd;i--){const d=new Date(TODAY.getFullYear(),TODAY.getMonth()-i,1);r.push({k:monthKey(d),l:MES[d.getMonth()],d})}return r}
+
+/* ---------- configuración ---------- */
+const GCATS=['Inversión publicitaria','Software y SaaS','Freelancers y proveedores','Operación y oficina','Viáticos y movilidad','Eventos y capacitación'];
+const CFG_DEFAULT={mql:50,sla:24,slaAlert:48,bantMin:3,bantAB:true,vig:15,cad1:3,cad2:7,cad3:12,disc1:5,disc2:15,mora1:7,mora2:15,riskDays:45,riskMora:15,fx:3.75,
+  prob:{'Lead':5,'MQL':15,'SQL-Prospección':30,'SQL-Cotización':50,'SQL-Negociación':70,'Cerrada-Ganada':100,'Cerrada-Perdida':0},
+  gastoUmbral:1500,budget:{'Inversión publicitaria':7500,'Software y SaaS':1600,'Freelancers y proveedores':9000,'Operación y oficina':3200,'Viáticos y movilidad':800,'Eventos y capacitación':1500},
+  agents:{},showTest:true,
+  notion:{opps:'https://app.notion.com/p/4fbbc1ba06b4412390dc15a6d517bcfa',cuentas:'https://app.notion.com/p/115ca7d660e94939932e4d37bc78cb17',contactos:'https://app.notion.com/p/faae1c343d274aa98866211b46d52fb4',propuestas:'https://app.notion.com/p/67aa5d2461a84cedaaf11ca1e554dcff',facturacion:'https://app.notion.com/p/59bfb0dbdaa64bb2bfa52f7311744d62',proyectos:'https://app.notion.com/p/0a9d5846a34643c584cfd2407aef28fb',tareas:'https://app.notion.com/p/120387a7daa544a8a99474ae4b4c6bdc',reuniones:'https://app.notion.com/p/f04f9a3d48df4cb3b268ccf75a11c0e0',gastos:''}};
+const NOTION_BASES=[['opps','Oportunidades'],['cuentas','Cuentas'],['contactos','Contactos'],['propuestas','Propuestas y cotizaciones'],['reuniones','Reuniones y actas'],['facturacion','Facturación y cobranzas'],['proyectos','Proyectos'],['tareas','Tareas'],['gastos','Gastos']];
+let CFG=JSON.parse(JSON.stringify(CFG_DEFAULT));
+function mergeCfg(p){const d=JSON.parse(JSON.stringify(CFG_DEFAULT));CFG={...d,...p,prob:{...d.prob,...(p.prob||{})},budget:{...d.budget,...(p.budget||{})},agents:{...(p.agents||{})},notion:{...d.notion,...(p.notion||{})}};AGENTS.forEach(a=>{if(CFG.agents[a.k]===undefined)CFG.agents[a.k]=true})}
+function saveCfg(){if(MODE==='cloud'){persistRaw('settings/config',CFG)}else{try{localStorage.setItem('jl-crm-cfg',JSON.stringify(CFG))}catch(e){}}}
+const toPEN=(v,m)=>m==='USD'?v*CFG.fx:v;
+const fmtMoney=(v,m)=>(m==='USD'?'US$ ':'S/ ')+Math.round(v).toLocaleString('es-PE');
+const fmtK=v=>{const s=v<0?'−':'';v=Math.abs(v);return s+'S/ '+(v>=1e6?(v/1e6).toFixed(2).replace('.',',')+' M':v>=1e4?Math.round(v/1e3)+' k':Math.round(v).toLocaleString('es-PE'))};
+const fmtS=v=>'S/ '+Math.round(v).toLocaleString('es-PE');
+const testB=o=>CFG.showTest&&o&&o.test?'<span class="test">PRUEBA</span>':'';
+
+/* ---------- catálogos ---------- */
+const STAGES=[
+ {k:'Lead',funnel:'Atracción',phase:'lead'},{k:'MQL',funnel:'Maduración',phase:'mql'},
+ {k:'SQL-Prospección',funnel:'Calificación/Venta',phase:'sql'},{k:'SQL-Cotización',funnel:'Calificación/Venta',phase:'sql'},{k:'SQL-Negociación',funnel:'Calificación/Venta',phase:'sql'},
+ {k:'Cerrada-Ganada',funnel:'Recompra',phase:'venta'},{k:'Cerrada-Perdida',funnel:'Calificación/Venta',phase:'lost'}];
+const STG=Object.fromEntries(STAGES.map((s,i)=>[s.k,{...s,i}]));
+const prob=k=>CFG.prob[k];
+const SERVICES=[['Estrategia/Consultoría',18000],['Bootcamp/Capacitación',9500],['Web/Landing',14000],['Campañas Ads',12000],['CRM & Automatización',22000],['Contenido',10500],['Growth integral',48000]];
+const RECURRING=['Campañas Ads','Contenido','Growth integral'];
+const SOURCES=['Referido','Web-Inbound','Evento','Outbound-Prospección','LinkedIn'];
+const LOSS=['Precio','Timing','Competencia','No decisión','Silencio','Fuera de alcance'];
+const ROLES=['Decisor','Influenciador','Usuario','Gatekeeper'];
+const CANALES=['Email','WhatsApp','LinkedIn','Llamada'];
+const OWNERS=['Alejandro L.','Mariana C.','Diego P.'];
+const TEAM=[['Alejandro L.','Strategic Planner Sr · aprueba descuentos y gastos'],['Mariana C.','Ejecutiva comercial'],['Diego P.','Ejecutivo comercial'],['Lucía R.','Performance & Ads'],['Renzo T.','CRM & Automatización'],['Valeria Q.','Contenido y diseño']];
+const TEAMN=TEAM.map(t=>t[0]);
+const SIZES=['Mediana (51–200)','Grande (201–1000)','Corporativa (1000+)'];
+const BANT=[['A','Decisor identificado'],['B','Presupuesto'],['N','Necesidad clara'],['T','Plazo definido']];
+const AGENTS=[
+ {k:'SM · Publicación',fam:'lead',st:['Lead'],d:'Publica contenido de atracción'},
+ {k:'SM · Conversación',fam:'lead',st:['Lead'],d:'Responde DMs y registra leads'},
+ {k:'Maduración · Alta a nurturing',fam:'mql',st:['Lead'],d:'Inscribe al contacto en nurturing'},
+ {k:'Maduración · Scoring',fam:'mql',st:['Lead','MQL'],d:'Recalcula score; cruza a MQL con el umbral'},
+ {k:'Seguimiento · Post-reunión',fam:'sql',st:['SQL-Prospección','SQL-Negociación'],d:'Acta y próximos pasos tras cada reunión'},
+ {k:'Seguimiento · Cotización sin respuesta',fam:'sql',st:['SQL-Cotización'],d:'Cadencia de recordatorios hasta el vencimiento'},
+ {k:'Facturación · Inicial',fam:'venta',st:['Cerrada-Ganada'],d:'Genera factura de adelanto (se valida a mano)'},
+ {k:'Facturación · Recurrente',fam:'venta',st:['Cerrada-Ganada'],d:'Emite fee mensual y controla mora'},
+ {k:'Proyectos · Kickoff',fam:'proy',st:['Cerrada-Ganada'],d:'Crea tablero y agenda de kickoff'}];
+AGENTS.forEach(a=>{if(CFG.agents[a.k]===undefined)CFG.agents[a.k]=true});
+const AGFAM=Object.fromEntries(AGENTS.map(a=>[a.k,a.fam]));
+const agOn=k=>CFG.agents[k]!==false;
+const HUMAN_CP={
+ 'Lead':['Revisar leads que el agente no pudo clasificar'],'MQL':['Asignar responsable si el SLA no se cumple'],
+ 'SQL-Prospección':['Confirmar BANT antes de cotizar'],'SQL-Cotización':['Al vencer la cotización: decidir si se marca Perdida — Silencio'],
+ 'SQL-Negociación':['Aprobar descuentos fuera del rango comercial','Validar condiciones de pago'],
+ 'Cerrada-Ganada':['Validar factura de adelanto','Aprobar equipo del proyecto'],'Cerrada-Perdida':['Motivo de pérdida de lista cerrada']};
+
+const ACC_RAW=[["Agroexport Valle Norte","Agroindustria"],["Constructora Pirca","Construcción"],["Clínica San Gabriel de Surco","Salud"],["Minera Cordillera Blanca","Minería"],["Textil Alpaca Real","Textil"],["Financiera Qhapaq","Finanzas"],["Logística Callao Express","Logística"],["Colegio Los Andes del Sur","Educación"],["Inmobiliaria Miraflores Park","Inmobiliaria"],["Cervecería Artesanal Barranco","Consumo masivo"],["Universidad Tecnológica del Pacífico","Educación"],["Ferretería Industrial Nazca","Retail"],["Laboratorios Farmandina","Salud"],["Transportes Chaski","Logística"],["Seguros Horizonte Perú","Finanzas"],["Cafetalera Selva Central","Agroindustria"],["Hoteles Ruta Inca","Turismo"],["Qori Labs Software","Tecnología"],["Distribuidora Mercantil del Sur","Consumo masivo"],["Energía Solar Arequipa","Energía"],["Grupo Automotriz Lima Motors","Automotriz"],["Pesquera Mar de Grau","Pesca"],["Cooperativa Santa Rosa","Finanzas"],["Cementos Huancayo Andino","Construcción"],["Instituto Superior Tecnovia","Educación"],["Casa Moderna Retail","Retail"],["Andina Fibra Telecom","Tecnología"],["Estudio Vargas & Ríos Abogados","Servicios profesionales"],["Sonrisa Plena Dental Center","Salud"],["Pulso Fit Gimnasios","Fitness"],["Plásticos Industriales Ate","Manufactura"],["Cóndor Tours Viajes","Turismo"],["Norte Capital Consultores","Servicios profesionales"],["Viñedos del Valle de Ica","Consumo masivo"],["Veterinaria Huellitas","Salud"],["Kallpa Pay Fintech","Finanzas"],["Metalmecánica Chilca","Manufactura"],["Supermercados Don Julio","Retail"],["Colegio Bilingüe Kantu","Educación"],["Costa Verde Homes","Inmobiliaria"],["BioSur Laboratorio Clínico","Salud"],["Andes Cold Logística","Logística"],["Editorial Nueva Pluma","Servicios profesionales"],["Agroindustrias Olmos Verde","Agroindustria"],["Libro Claro SaaS Contable","Tecnología"],["Constructora Wayra","Construcción"],["Global Talk Idiomas","Educación"],["Cosméticos Flor de Amancay","Consumo masivo"],["Minera Puquio Gold","Minería"],["Salud Integral Andina Seguros","Finanzas"]];
+const FIRST=['María','José','Lucía','Carlos','Ana','Jorge','Valeria','Luis','Carmen','Diego','Rosa','Miguel','Patricia','Renato','Claudia','Fernando','Gabriela','Ricardo','Daniela','Javier','Milagros','Andrés','Paola','Eduardo','Sofía','Martín','Ximena','Gonzalo','Fiorella','Raúl','Katherine','Óscar','Liliana','César','Mónica','Alonso','Rocío','Hugo','Pamela','Sebastián','Verónica','Iván','Carla','Julio','Natalia','Manuel','Silvana','Álvaro','Cecilia','Bruno'];
+const LAST=['Quispe','Flores','Rojas','Torres','Vargas','Castillo','Mendoza','Huamán','Salazar','Chávez','Ramírez','Paredes','Gutiérrez','Espinoza','Delgado','Vásquez','Ríos','Palacios','Cárdenas','Benavides','Zegarra','Alvarado','Núñez','Aguilar','Montoya','Cáceres','Ponce','Salas','Arias','Tello'];
+const CARGOS=['Gerente de Marketing','Jefe Comercial','Gerente General','CMO','Gerente de Transformación Digital','Jefa de Marca','Director Comercial','Coordinadora de Marketing Digital','Gerente de Ventas','Head of Growth'];
+const NEXT={'Lead':['Enviar caso de éxito del sector','Invitar a webinar de IA aplicada','Enviar diagnóstico express por LinkedIn'],'MQL':['Llamada de descubrimiento','Agendar discovery de 30 min','Enviar agenda de discovery'],'SQL-Prospección':['Validar presupuesto con gerencia','Diagnóstico con equipo comercial','Levantar brief y KPIs actuales'],'SQL-Cotización':['Seguimiento a cotización enviada','Resolver dudas de alcance','Presentar propuesta a comité'],'SQL-Negociación':['Ajustar condiciones de pago','Revisar descuento solicitado','Enviar contrato para firma']};
+const COMPROB=['Factura','Recibo por honorarios','Boleta','Invoice exterior'];
+
+/* ---------- datos simulados ---------- */
+const accounts=[],contacts=[],opps=[],proposals=[],invoices=[],projects=[],tasks=[],meetings=[],gastos=[],feedUser=[];
+function acc(id){return accounts.find(x=>x.id===id)}
+function con(id){return contacts.find(x=>x.id===id)}
+function opp(id){return opps.find(x=>x.id===id)}
+function proj(id){return projects.find(x=>x.id===id)}
+function latestProp(o){return proposals.filter(p=>p.oppId===o.id).sort((a,b)=>b.version-a.version)[0]}
+function genDemo(){
+  const stageList=shuffle([...Array(7).fill('Lead'),...Array(9).fill('MQL'),...Array(9).fill('SQL-Prospección'),...Array(8).fill('SQL-Cotización'),...Array(7).fill('SQL-Negociación'),...Array(6).fill('Cerrada-Ganada'),...Array(4).fill('Cerrada-Perdida')]);
+  const first=shuffle(FIRST.slice());
+  const wonAgo=shuffle([4,12,28,55,80,118]);
+  const mqlHours=shuffle([8,20,30,40,55,70,96,130,200]);
+  const cotSent=shuffle([1,3,5,7,9,12,13,16]);
+  let cW=0,cM=0,cC=0,leadTwo=false,pid=0,mid=0;
+  for(let i=0;i<50;i++){
+    const [nm,sector]=ACC_RAW[i];
+    const sIdx=R()<.42?0:R()<.7?1:2;
+    const slug=ascii(nm).toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,16);
+    const a={id:'A'+pad(i+1),name:nm,sector,size:SIZES[sIdx],sizeIdx:sIdx,domain:slug+'.com.pe',test:true};
+    accounts.push(a);
+    const st=stageList[i];
+    let source=pick(SOURCES);
+    if(st==='Cerrada-Ganada'&&R()<.4)source='Cliente existente';
+    const fn=first[i],ln=pick(LAST);
+    const c={id:'C'+pad(i+1),accountId:a.id,name:fn+' '+ln,cargo:pick(CARGOS),email:`${ascii(fn).toLowerCase()}.${ascii(ln).toLowerCase()}@${a.domain}`,
+      phone:`+51 9${rint(10,99)} ${rint(100,999)} ${rint(100,999)}`,linkedin:`linkedin.com/in/${ascii(fn+'-'+ln).toLowerCase()}`,
+      fuente:source==='Cliente existente'?'Referido':source,rol:R()<.45?'Decisor':R()<.55?'Influenciador':R()<.5?'Gatekeeper':'Usuario',canal:pick(CANALES),estado:'Nuevo',test:true};
+    contacts.push(c);
+    let svcs;
+    if(R()<.14)svcs=['Growth integral'];
+    else{const pool=shuffle(SERVICES.slice(0,6).map(s=>s[0]));svcs=pool.slice(0,R()<.5?1:R()<.7?2:3)}
+    const base=sum(svcs,s=>SERVICES.find(x=>x[0]===s)[1])*[0.8,1.1,1.6][sIdx]*(0.85+R()*0.4);
+    const usd=R()<.3;
+    const value=usd?Math.round(base/FX0/100)*100:Math.round(base/500)*500;
+    let lostFrom=null;
+    if(st==='Cerrada-Perdida')lostFrom=pick(['SQL-Prospección','SQL-Cotización','SQL-Cotización','SQL-Negociación']);
+    const eff=lostFrom||st;
+    let n;
+    switch(eff){case'Lead':n=R()<.5?0:1;if(!leadTwo){n=2;leadTwo=true}break;case'MQL':n=R()<.7?2:3;break;case'SQL-Prospección':n=R()<.5?2:3;break;case'SQL-Cotización':n=R()<.6?3:4;break;case'SQL-Negociación':n=R()<.4?3:4;break;default:n=4}
+    const order=shuffle(['A','B','N','T']);
+    if(STG[eff].i>=3){const g=R()<.5?'B':'A';order.splice(order.indexOf(g),1);order.unshift(g)}
+    const bant={A:false,B:false,N:false,T:false};order.slice(0,n).forEach(k=>bant[k]=true);
+    let createdAgo,closedAt=null,closeEst=null,nextStepDate=null,nextStep='';
+    if(st==='Cerrada-Ganada'){const ca=wonAgo[cW++];closedAt=dOff(-ca);createdAgo=ca+rint(30,60)}
+    else if(st==='Cerrada-Perdida'){const ca=rint(5,60);closedAt=dOff(-ca);createdAgo=ca+rint(20,50)}
+    else{createdAgo={'Lead':rint(0,20),'MQL':rint(10,35),'SQL-Prospección':rint(20,50),'SQL-Cotización':rint(30,70),'SQL-Negociación':rint(40,90)}[st];closeEst=dOff(rint(7,100));nextStepDate=dOff(rint(-4,10));nextStep=pick(NEXT[st])}
+    const created=new Date(dOff(-createdAgo).getTime()+rint(8,18)*HOUR);
+    let mqlAt=null,firstContactAt=null;
+    if(st==='MQL'){const h=mqlHours[cM++];mqlAt=new Date(NOW-h*HOUR);if(![8,30,55,70].includes(h))firstContactAt=new Date(mqlAt.getTime()+Math.min(h-1,rint(2,20))*HOUR)}
+    else if(STG[eff].i>=1){mqlAt=new Date(created.getTime()+rint(2,8)*DAY);firstContactAt=new Date(mqlAt.getTime()+rint(3,30)*HOUR)}
+    const o={id:'O'+pad(i+1),accountId:a.id,contactId:c.id,name:`${svcs[0]}${svcs.length>1?' +'+(svcs.length-1):''} · ${nm.split(' ').slice(0,2).join(' ')}`,
+      value,currency:usd?'USD':'PEN',services:svcs,stage:st,bant,source,
+      lossReason:st==='Cerrada-Perdida'?(STG[lostFrom].i>=3&&R()<.5?'Silencio':pick(LOSS.filter(x=>x!=='Silencio'))):null,
+      lostFrom,created,closeEst,closedAt,nextStep,nextStepDate,owner:pick(OWNERS),mqlAt,firstContactAt,log:[],test:true};
+    opps.push(o);
+    c.estado=st==='Lead'?'Nuevo':st==='MQL'?(firstContactAt?'En conversación':'Nuevo'):st==='Cerrada-Ganada'?'Activo':st==='Cerrada-Perdida'?'Inactivo':'En conversación';
+    const mk=(tipo,dt,res,prox)=>meetings.push({id:'M'+pad(++mid,3),oppId:o.id,accountId:a.id,tipo,fecha:dt,resultado:res,proximos:prox});
+    if(STG[eff].i>=2)mk('Discovery',new Date(firstContactAt.getTime()+rint(2,6)*DAY),pick(['Dolor confirmado: leads sin calificar','Necesita ordenar su funnel antes de invertir en Ads','Equipo comercial sin CRM ni reportes']),'Levantar brief y enviar diagnóstico');
+    const cond=svcs.some(s=>RECURRING.includes(s))?(svcs.every(s=>RECURRING.includes(s))?'Fee mensual · pago a 15 días':'50 % adelanto / 50 % contra entrega + fee mensual'):'50 % adelanto / 50 % contra entrega';
+    const alc=`${svcs.join(' + ')} · ${svcs.includes('Growth integral')?6:rint(2,4)} meses`;
+    const addProp=(ver,sentAgo,estado,disc,approved,monto)=>proposals.push({id:'P'+pad(++pid,3),oppId:o.id,version:ver,alcance:alc,monto,currency:o.currency,discount:disc,approved,estado,sentAt:dOff(-sentAgo),condiciones:cond,test:true});
+    const round=v=>o.currency==='USD'?Math.round(v/100)*100:Math.round(v/500)*500;
+    if(eff==='SQL-Cotización'||eff==='SQL-Negociación'||st==='Cerrada-Ganada'){
+      let versions,latestAgo,latestEstado,disc;
+      if(st==='SQL-Cotización'){versions=R()<.6?1:2;latestAgo=cotSent[cC++];latestEstado='Enviada';disc=pick([0,0,3,5,8])}
+      else if(st==='SQL-Negociación'){versions=R()<.5?2:3;latestAgo=rint(2,9);latestEstado='Vigente';disc=pick([5,8,10,12,18])}
+      else if(st==='Cerrada-Ganada'){versions=R()<.5?1:2;latestAgo=daysBetween(closedAt,TODAY)+rint(5,12);latestEstado='Aceptada';disc=pick([0,5,8,10])}
+      else{versions=R()<.6?1:2;latestAgo=daysBetween(closedAt,TODAY)+(o.lossReason==='Silencio'?16:rint(3,12));latestEstado=o.lossReason==='Silencio'?'Vencida':'Rechazada';disc=pick([0,5,8])}
+      for(let v=1;v<=versions;v++){const last=v===versions;
+        addProp(v,latestAgo+(versions-v)*rint(5,9),last?latestEstado:'Vencida',last?disc:0,last?(st!=='SQL-Cotización'&&st!=='SQL-Negociación'?true:(disc>5&&R()<.5)):true,round(value*(1+(versions-v)*0.08)))}
+      mk('Presentación de propuesta',dOff(-latestAgo+1),pick(['Interés alto; pide ajustar alcance','Comité revisará con finanzas','Buena recepción, compara con otra agencia']),'Enviar versión ajustada');
+      if(eff==='SQL-Negociación'||st==='Cerrada-Ganada')mk('Negociación',dOff(-Math.max(1,latestAgo-3)),pick(['Pide descuento por pago adelantado','Acepta alcance, revisa condiciones','Solicita pago en 3 partes']),'Enviar condiciones finales');
+    }
+  }
+  let inv=231,prj=0,tid=0;
+  opps.filter(o=>o.stage==='Cerrada-Ganada').forEach(o=>{
+    const a=acc(o.accountId),p=latestProp(o),net=p?p.monto*(1-p.discount/100):o.value;
+    const ago=daysBetween(o.closedAt,TODAY);
+    const mkInv=(tipo,monto,issued,dueDays)=>{if(issued>TODAY)return;invoices.push({id:'I'+pad(inv,3),numero:'F001-000'+(inv++),oppId:o.id,accountId:a.id,tipo,monto:Math.round(monto),currency:o.currency,forma:pick(['Transferencia','Transferencia','Depósito en cuenta','Tarjeta corporativa']),issuedAt:issued,dueAt:new Date(issued.getTime()+dueDays*DAY),paidAt:null,estado:'Emitida',decision:null,test:true})};
+    const recurring=o.services.some(s=>RECURRING.includes(s)),onlyRec=o.services.every(s=>RECURRING.includes(s));
+    if(!onlyRec){mkInv('Adelanto',net*0.5,dOff(-ago+2),7);if(ago>50)mkInv('Hito',net*0.5,dOff(-ago+rint(40,50)),15)}
+    if(recurring){const fee=net*(onlyRec?0.18:0.1);for(let k=1;k<=3;k++){if(ago-30*k<0)break;mkInv('Recurrente',fee,dOff(-ago+30*k-28),15)}}
+    const fase=ago<15?0:ago<45?1:ago<90?2:3;const est=rint(38,46);
+    const pr={id:'PR'+pad(++prj),oppId:o.id,accountId:a.id,name:`${o.services[0]} — ${a.name.split(' ').slice(0,2).join(' ')}`,fase,
+      equipo:shuffle(TEAMN.slice()).slice(0,rint(2,3)),avance:Math.min(100,fase*25+rint(5,20)),margenEst:est,margenReal:fase>=1?est-rint(-2,9):null,
+      valorNeto:toPEN(net,o.currency),lastFollowUp:dOff(-rint(3,30)),feedbackNeg:false,scopeReduction:false,test:true};
+    projects.push(pr);
+    meetings.push({id:'M'+pad(meetings.length+1,3),oppId:o.id,accountId:a.id,tipo:'Kickoff',fecha:dOff(-ago+rint(3,6)),resultado:'Cronograma y responsables acordados',proximos:'Entregar diagnóstico Fase 1'});
+    [['Kickoff y accesos a plataformas',0],['Diagnóstico de funnel y data',1],['Plan de campañas / contenidos',1],['Implementación y QA',2],['Reporte de optimización mensual',3]].forEach(([t,f],k)=>tasks.push({id:'T'+pad(++tid,3),projectId:pr.id,titulo:t,responsable:pick(pr.equipo),estado:f<fase?'Hecha':f===fase?(R()<.5?'En curso':'Pendiente'):'Pendiente',fecha:dOff(-ago+7+k*18)}));
+  });
+  invoices.forEach(i=>{if(i.dueAt>TODAY)i.estado='Pendiente';else if(R()<.72){i.paidAt=new Date(Math.min(TODAY,i.dueAt.getTime()+rint(-4,3)*DAY));i.estado='Pagada'}else i.estado='Pendiente'});
+  const used=new Set();
+  [22,11,4].forEach(t=>{const c=invoices.find(i=>!used.has(i.id)&&daysBetween(i.issuedAt,TODAY)>=t+7);if(c){used.add(c.id);c.dueAt=dOff(-t);c.paidAt=null;c.estado='Pendiente'}});
+  if(projects[1])projects[1].lastFollowUp=dOff(-52);
+  if(projects[3])projects[3].feedbackNeg=true;
+  if(projects[4])projects[4].scopeReduction=true;
+
+  /* gastos · 6 meses */
+  let gid=0;
+  const add=g=>{if(g.fecha>TODAY)return;gastos.push({id:'G'+pad(++gid,3),recurrente:false,projectId:null,responsable:'Alejandro L.',...g,estado:'Registrado',test:true})};
+  for(let m=5;m>=0;m--){
+    const Y=TODAY.getFullYear(),M=TODAY.getMonth()-m,day=d=>new Date(Y,M,d);
+    [['Google Ads · campañas de búsqueda','Google',2300,3100],['Meta Ads · prospección y remarketing','Meta Platforms',1700,2500],['LinkedIn Ads · lead gen B2B','LinkedIn',1900,2800]].forEach(([c,p,a,b],k)=>add({concepto:c,proveedor:p,categoria:GCATS[0],monto:Math.round(rint(a,b)/10)*10,currency:'PEN',fecha:day(2+k),comprobante:'Invoice exterior',recurrente:true,responsable:'Lucía R.'}));
+    [['HubSpot Starter','HubSpot',90],['ActiveCampaign Plus','ActiveCampaign',49],['Apollo.io Basic','Apollo.io',59],['OpenAI API','OpenAI',rint(45,120)],['Notion Plus','Notion Labs',32],['n8n Cloud Starter','n8n GmbH',24]].forEach(([c,p,v],k)=>add({concepto:c,proveedor:p,categoria:GCATS[1],monto:v,currency:'USD',fecha:day(5+k),comprobante:'Invoice exterior',recurrente:true,responsable:'Renzo T.'}));
+    [['Coworking Barranco · 4 puestos','Espacio Andino SAC',1800,'Factura',1],['Contabilidad externa','Estudio Contable Ramos',900,'Recibo por honorarios',10],['Internet y telefonía','Fibra Lima SAC',260,'Factura',12]].forEach(([c,p,v,cp,d])=>add({concepto:c,proveedor:p,categoria:GCATS[3],monto:v,currency:'PEN',fecha:day(d),comprobante:cp,recurrente:true}));
+    for(let k=0,n=rint(1,3);k<n;k++){const a=pick(accounts);add({concepto:`Movilidad a reunión · ${a.name}`,proveedor:'Taxi ejecutivo',categoria:GCATS[4],monto:rint(4,26)*10,currency:'PEN',fecha:day(rint(3,27)),comprobante:'Boleta',responsable:pick(OWNERS)})}
+    if(m%2===0){const e=pick([['Entrada · Congreso de Marketing B2B Lima','Asociación Peruana de Marketing Digital',rint(45,90)*10],['Curso GA4 y GTM avanzado','Academia Datos Perú',rint(60,120)*10]]);add({concepto:e[0],proveedor:e[1],categoria:GCATS[5],monto:e[2],currency:'PEN',fecha:day(rint(8,22)),comprobante:'Factura'})}
+    if(m%3===1)add({concepto:'Piezas LinkedIn de Jungla Lab (marca propia)',proveedor:'Andrea Pinto (freelance)',categoria:GCATS[2],monto:rint(12,18)*100,currency:'PEN',fecha:day(rint(10,20)),comprobante:'Recibo por honorarios',responsable:'Valeria Q.'});
+  }
+  const FREE=[['Diseño gráfico · piezas de campaña','Andrea Pinto (freelance)'],['Desarrollo web · landing','Kevin Llanos (freelance)'],['Redacción de contenidos','Paula Cornejo (freelance)'],['Edición de video · reels','Studio Manglar EIRL'],['Configuración de CRM','Datos Claros SAC']];
+  projects.forEach(p=>{const o=opp(p.oppId),since=daysBetween(o.closedAt,TODAY);const n=since<10?0:Math.min(3,1+Math.floor(since/40));
+    for(let k=0;k<n;k++){const f=pick(FREE);add({concepto:`${f[0]} · ${acc(p.accountId).name}`,proveedor:f[1],categoria:GCATS[2],monto:rint(16,50)*50,currency:'PEN',fecha:dOff(-rint(2,since-3)),comprobante:f[1].includes('freelance')?'Recibo por honorarios':'Factura',projectId:p.id,responsable:pick(p.equipo)})}});
+  const pj=projects.find(p=>p.fase>=1)||projects[0];
+  add({concepto:`Edición de video · caso de éxito ${acc(pj.accountId).name}`,proveedor:'Studio Manglar EIRL',categoria:GCATS[2],monto:2400,currency:'PEN',fecha:dOff(-2),comprobante:'Factura',projectId:pj.id,responsable:'Valeria Q.'});
+  add({concepto:'Stand compartido · Feria Expo Pyme Lima',proveedor:'Feria Expo Pyme SAC',categoria:GCATS[5],monto:3200,currency:'PEN',fecha:dOff(-4),comprobante:'Factura',responsable:'Mariana C.'});
+  gastos.forEach(g=>{const age=daysBetween(g.fecha,TODAY);if(age>12)g.estado='Pagado';else if(g.recurrente)g.estado='Pagado';else if(toPEN(g.monto,g.currency)<=CFG_DEFAULT.gastoUmbral&&R()<.5)g.estado='Aprobado'});
+  gastos.sort((a,b)=>b.fecha-a.fecha);
+}
+
+/* ---------- reglas ---------- */
+const score=o=>Object.values(o.bant).filter(Boolean).length*25;
+const bantN=o=>Object.values(o.bant).filter(Boolean).length;
+const bantGate=o=>bantN(o)>=CFG.bantMin&&(!CFG.bantAB||o.bant.A||o.bant.B);
+const isClosed=o=>o.stage.startsWith('Cerrada');
+const reached=o=>o.stage==='Cerrada-Perdida'?STG[o.lostFrom||'SQL-Prospección'].i:STG[o.stage].i;
+function approverFor(d){if(d<=CFG.disc1)return{who:'Comercial',lvl:0};if(d<=CFG.disc2)return{who:'Alejandro',lvl:1};return{who:'Alejandro + revisión de margen',lvl:2}}
+const needsApproval=p=>p.discount>CFG.disc1&&!p.approved;
+const netOf=p=>p.monto*(1-p.discount/100);
+const validUntil=p=>new Date(p.sentAt.getTime()+CFG.vig*DAY);
+function cadence(p){
+  if(p.estado!=='Enviada')return null;
+  const dd=daysBetween(p.sentAt,TODAY);
+  if(dd>=CFG.vig)return{dd,lvl:4,cls:'crit',t:`Día ${dd} · decidir cierre (silencio)`};
+  if(dd>=CFG.cad3)return{dd,lvl:3,cls:'crit',t:`Día ${dd} · breakup email`};
+  if(dd>=CFG.cad2)return{dd,lvl:2,cls:'warn',t:`Día ${dd} · recordatorio + llamada`};
+  if(dd>=CFG.cad1)return{dd,lvl:1,cls:'info',t:`Día ${dd} · recordatorio automático`};
+  return{dd,lvl:0,cls:'ok',t:`Día ${dd} · en plazo`};
+}
+const isPaid=i=>!!i.paidAt;
+function mora(i){if(isPaid(i)||i.estado==='Borrador')return 0;return Math.max(0,daysBetween(i.dueAt,TODAY))}
+function payState(i){if(i.estado==='Borrador')return'Borrador';if(isPaid(i))return'Pagada';return mora(i)>0?'Vencida':'Pendiente'}
+function moraLevel(i){const m=mora(i);if(m<=0)return null;if(m<=CFG.mora1)return{cls:'info',t:'Recordatorio neutro'};if(m<=CFG.mora2)return{cls:'warn',t:'Aviso al responsable'};return{cls:'crit',t:'Checkpoint humano'}}
+function slaState(o){
+  if(o.stage!=='MQL'||o.firstContactAt||!o.mqlAt)return null;
+  const h=Math.round((NOW-o.mqlAt)/HOUR);
+  if(h>CFG.slaAlert)return{cls:'crit',t:`SLA vencido · ${h} h`,h};
+  if(h>CFG.sla)return{cls:'warn',t:`SLA ${CFG.sla} h excedido · ${h} h`,h};
+  return{cls:'ok',t:`SLA en plazo · ${h} h`,h};
+}
+const projCost=p=>sum(gastos.filter(g=>g.projectId===p.id&&g.estado!=='Rechazado'),g=>toPEN(g.monto,g.currency));
+function projFlags(p){const f=[];const d=daysBetween(p.lastFollowUp,TODAY);if(d>CFG.riskDays)f.push(`Sin seguimiento hace ${d} días`);if(p.feedbackNeg)f.push('Feedback negativo del cliente');if(invoices.some(i=>i.oppId===p.oppId&&mora(i)>CFG.riskMora))f.push(`Factura vencida +${CFG.riskMora} días`);if(p.scopeReduction)f.push('Reducción de alcance');return f}
+function projRisk(p){const n=projFlags(p).length;if(n>=2)return{c:'r',t:'Rojo'};if(n===1||(p.margenReal!=null&&p.margenReal<p.margenEst-6))return{c:'a',t:'Ámbar'};return{c:'g',t:'Verde'}}
+const reqApproval=g=>toPEN(g.monto,g.currency)>CFG.gastoUmbral;
+function gState(g){if(g.estado==='Registrado'&&reqApproval(g))return'Por aprobar';return g.estado}
+const G_CLS={'Registrado':'info','Por aprobar':'warn','Aprobado':'ok','Pagado':'mute','Rechazado':'crit'};
+function oppAlerts(o){
+  const al=[];const s=slaState(o);if(s&&s.cls!=='ok')al.push(s);
+  if(!isClosed(o)&&o.stage!=='Lead'&&score(o)<CFG.mql)al.push({cls:'warn',t:`Bajo umbral MQL (${score(o)})`});
+  const p=latestProp(o);
+  if(p&&!isClosed(o)){const c=cadence(p);if(c&&c.lvl>=2)al.push({cls:c.cls,t:c.lvl===4?`Cotización día ${CFG.vig}+`:c.lvl===3?`Cotización día ${CFG.cad3}`:`Cotización día ${CFG.cad2}`});if(needsApproval(p))al.push({cls:'warn',t:'Descuento por aprobar'})}
+  const m=Math.max(0,...invoices.filter(i=>i.oppId===o.id).map(mora));if(m>0)al.push({cls:m>CFG.mora2?'crit':m>CFG.mora1?'warn':'info',t:`Mora ${m} d`});
+  if(!isClosed(o)&&o.nextStepDate&&daysBetween(o.nextStepDate,TODAY)>0)al.push({cls:'warn',t:'Próximo paso vencido'});
+  return al;
+}
+const chip=a=>`<span class="chip ${a.cls}">${esc(a.t)}</span>`;
+const stagePill=k=>`<span class="pill ph-${STG[k].phase}">${esc(k)}</span>`;
+
+/* ---------- feed de agentes ---------- */
+function agentFeed(){
+  const ev=[];
+  opps.forEach(o=>{const a=acc(o.accountId),c=con(o.contactId);
+    if(o.stage==='MQL'&&o.mqlAt)ev.push({t:o.mqlAt,ag:'Maduración · Scoring',x:`movió a MQL a ${c.name} (${a.name}) · score ${score(o)}`});
+    if(o.stage==='Lead'&&daysBetween(o.created,TODAY)<=10){const soc=o.source==='LinkedIn'||o.source==='Web-Inbound';ev.push({t:o.created,ag:soc?'SM · Conversación':'Maduración · Alta a nurturing',x:soc?`registró el lead ${c.name} (${a.name}) desde ${o.source}`:`agregó a ${c.name} (${a.name}) a la secuencia de nurturing`})}
+    const p=latestProp(o);
+    if(p&&p.estado==='Enviada'){const c2=cadence(p);[CFG.cad1,CFG.cad2,CFG.cad3].forEach((d,k)=>{if(c2.dd>=d)ev.push({t:new Date(p.sentAt.getTime()+d*DAY+9.5*HOUR),ag:'Seguimiento · Cotización sin respuesta',x:`${k===2?'envió breakup email':k===1?'envió recordatorio y agendó llamada':'envió recordatorio'} (día ${d}) a ${c.name} · ${a.name}`})})}
+  });
+  meetings.forEach(m=>{if(daysBetween(m.fecha,TODAY)<=14&&m.tipo!=='Kickoff'){const o=opp(m.oppId);ev.push({t:new Date(m.fecha.getTime()+17*HOUR),ag:'Seguimiento · Post-reunión',x:`envió acta de "${m.tipo}" y próximos pasos a ${con(o.contactId).name}`})}});
+  invoices.forEach(i=>{if(i.estado==='Borrador')return;ev.push({t:new Date(i.issuedAt.getTime()+10*HOUR),ag:i.tipo==='Recurrente'?'Facturación · Recurrente':'Facturación · Inicial',x:`generó factura ${i.numero} (${i.tipo.toLowerCase()}) para ${acc(i.accountId).name}`})});
+  projects.forEach(p=>{const o=opp(p.oppId);ev.push({t:new Date(o.closedAt.getTime()+DAY+11*HOUR),ag:'Proyectos · Kickoff',x:`creó tablero, cronograma y agenda de kickoff para ${acc(p.accountId).name}`})});
+  [1,3,6].forEach((d,k)=>ev.push({t:new Date(TODAY.getTime()-d*DAY+(8+k)*HOUR),ag:'SM · Publicación',x:['programó 3 posts de LinkedIn · serie casos de éxito','publicó carrusel "IA aplicada al funnel B2B"','programó newsletter quincenal para 1 240 suscriptores'][k]}));
+  return ev.filter(e=>agOn(e.ag)).concat(feedUser).filter(e=>e.t<=NOW||e.user).sort((a,b)=>b.t-a.t);
+}
+function pushFeed(ag,x,oppId){
+  const on=agOn(ag);
+  const e={t:new Date(),ag:on?ag:'Tarea manual',x:on?x:`${ag} está apagado: ${x}`,user:!on,agentOn:on};
+  addAct(e);
+  if(oppId){const o=opp(oppId);if(o){o.log=o.log||[];o.log.push({t:new Date(),ag:e.ag,x:e.x})}}
+}
+
+/* ---------- checkpoints humanos ---------- */
+function checkpoints(){
+  const cp=[];
+  proposals.forEach(p=>{const o=opp(p.oppId);if(isClosed(o))return;const a=acc(o.accountId);
+    if(needsApproval(p))cp.push({cls:'warn',t:`Aprobar descuento ${p.discount} % · v${p.version}`,s:`${a.name} · aprueba ${approverFor(p.discount).who}`,act:'openOpp',id:o.id});
+    const c=cadence(p);if(c&&c.lvl===4)cp.push({cls:'crit',t:`Cotización sin respuesta ${c.dd} días`,s:`${a.name} · decidir si se marca Perdida — Silencio`,act:'openOpp',id:o.id})});
+  invoices.forEach(i=>{const a=acc(i.accountId);
+    if(i.estado==='Borrador')cp.push({cls:'info',t:`Validar factura ${i.numero}`,s:`${a.name} · generada por Facturación · Inicial`,act:'goInv',id:i.id});
+    if(mora(i)>CFG.mora2&&!i.decision)cp.push({cls:'crit',t:`Cobranza: ${mora(i)} días de mora`,s:`${a.name} · ${i.numero}`,act:'goInv',id:i.id})});
+  gastos.forEach(g=>{if(gState(g)==='Por aprobar')cp.push({cls:'warn',t:`Aprobar gasto ${fmtMoney(g.monto,g.currency)}`,s:`${g.concepto} · ${g.proveedor}`,act:'goGasto',id:g.id})});
+  opps.forEach(o=>{const s=slaState(o);if(s&&s.cls==='crit')cp.push({cls:'crit',t:`SLA vencido · ${s.h} h sin primer contacto`,s:`${con(o.contactId).name} · ${acc(o.accountId).name}`,act:'openOpp',id:o.id})});
+  return cp;
+}
+
+/* ---------- métricas compartidas ---------- */
+const monthStart=new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
+const inMonth=d=>d>=monthStart&&d<=NOW;
+const gPEN=g=>toPEN(g.monto,g.currency);
+const liveG=()=>gastos.filter(g=>g.estado!=='Rechazado');
+function adsLast30(){return sum(liveG().filter(g=>g.categoria===GCATS[0]&&daysBetween(g.fecha,TODAY)<=30),gPEN)}
+function kpis(){
+  const n=opps.length,nM=opps.filter(o=>reached(o)>=1).length,nS=opps.filter(o=>reached(o)>=2).length;
+  const won=opps.filter(o=>o.stage==='Cerrada-Ganada'),lost=opps.filter(o=>o.stage==='Cerrada-Perdida');
+  const leads30=opps.filter(o=>daysBetween(o.created,TODAY)<=30).length;
+  const ads=adsLast30();
+  const ciclo=Math.round(avg(won,o=>daysBetween(o.created,o.closedAt)));
+  const open=opps.filter(o=>!isClosed(o));
+  const pipe=sum(open,o=>toPEN(o.value,o.currency)*prob(o.stage)/100),pipeFull=sum(open,o=>toPEN(o.value,o.currency));
+  const fm=invoices.filter(i=>i.estado!=='Borrador'&&inMonth(i.issuedAt));
+  const fact=sum(fm,i=>toPEN(i.monto,i.currency));
+  const due=invoices.filter(i=>i.estado!=='Borrador'&&i.dueAt<=TODAY);
+  const onTime=due.filter(i=>i.paidAt&&sod(i.paidAt)<=sod(i.dueAt)).length;
+  const gm=liveG().filter(g=>inMonth(g.fecha)),gmT=sum(gm,gPEN),bud=sum(GCATS,c=>CFG.budget[c]||0);
+  const vencido=sum(invoices.filter(i=>mora(i)>0),i=>toPEN(i.monto,i.currency));
+  return {
+    leads:{l:'Leads · 30 días',v:leads30,f:'Oportunidades creadas'},
+    cpl:{l:'CPL',v:fmtS(ads/Math.max(1,leads30)),f:`${fmtS(ads)} en Ads (30 d) ÷ leads`},
+    l2m:{l:'Lead → MQL',v:pct(nM,n)+' %',f:`${nM} de ${n} alcanzaron MQL`},
+    m2s:{l:'MQL → SQL',v:pct(nS,nM)+' %',f:`${nS} de ${nM} alcanzaron SQL`},
+    win:{l:'Tasa de cierre',v:pct(won.length,won.length+lost.length)+' %',f:`${won.length} ganadas · ${lost.length} perdidas`},
+    ciclo:{l:'Ciclo de venta',v:ciclo+' d',f:'Promedio Lead → Ganada'},
+    pipe:{l:'Pipeline ponderado',v:fmtK(pipe),f:`Bruto ${fmtK(pipeFull)} × probabilidad`},
+    fact:{l:'Facturación del mes',v:fmtK(fact),f:`${fm.length} comprobantes en ${MES[TODAY.getMonth()]}`},
+    ontime:{l:'Cobrado a tiempo',v:pct(onTime,due.length)+' %',f:`${onTime} de ${due.length} facturas ya vencidas`},
+    venc:{l:'Cartera vencida',v:fmtK(vencido),f:`${invoices.filter(i=>mora(i)>0).length} facturas con mora`},
+    gastos:{l:'Gastos del mes',v:fmtK(gmT),f:`${pct(gmT,bud)} % del presupuesto (${fmtK(bud)})`},
+    nps:{l:'NPS',v:'+58',f:'12 respuestas de clientes activos',sim:1}};
+}
+
+/* ---------- gráficos ---------- */
+function niceMax(v){if(v<=0)return 1;const e=Math.pow(10,Math.floor(Math.log10(v)));const f=v/e;return(f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*e}
+function roundTop(x,y,w,h,r){if(h<=0.5)return'';r=Math.min(r,h,w/2);return`M${x},${y+h}V${y+r}Q${x},${y} ${x+r},${y}H${x+w-r}Q${x+w},${y} ${x+w},${y+r}V${y+h}Z`}
+function vbars(data,{color='var(--accent)',fmt=fmtK,label='Serie',hl=null}={}){
+  const W=560,H=210,pl=68,pr=8,pt=20,pb=26;
+  const mx=niceMax(Math.max(0,...data.map(d=>d.v))/4)*4;const iw=W-pl-pr,ih=H-pt-pb,step=iw/data.length,bw=Math.min(54,step*0.62);
+  const y=v=>pt+ih-(v/mx)*ih;
+  const imax=data.reduce((b,d,i)=>d.v>data[b].v?i:b,0);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
+  for(let i=0;i<=4;i++){const v=mx*i/4;s+=`<line class="${i?'grid':'base'}" x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${pl-8}" y="${y(v)+4}" text-anchor="end">${esc(fmt(v))}</text>`}
+  data.forEach((d,i)=>{const x=pl+step*i+(step-bw)/2,h=ih*(d.v/mx);
+    s+=`<g data-tip="${esc(d.l+' · '+fmt(d.v)+(d.sub?' · '+d.sub:''))}"><rect x="${pl+step*i}" y="${pt}" width="${step}" height="${ih}" fill="transparent"/><path d="${roundTop(x,y(d.v),bw,h,4)}" fill="${d.c||color}" opacity="${hl==null||hl===i?1:.55}"/></g>`;
+    s+=`<text class="ax" x="${x+bw/2}" y="${H-8}" text-anchor="middle">${esc(d.l)}</text>`;
+    if(i===imax||i===data.length-1)s+=`<text class="axv" x="${x+bw/2}" y="${y(d.v)-6}" text-anchor="middle">${esc(fmt(d.v))}</text>`});
+  return `<div class="vb">${s}</svg></div>`;
+}
+function hbar(rows,{color='var(--accent)',fmt=v=>String(v),max}={}){
+  if(!rows.length)return'<p class="note">Sin datos para este corte.</p>';
+  const mx=max||Math.max(1e-9,...rows.map(r=>Math.max(r.v,r.mk||0)));
+  return `<div class="hb">${rows.map(r=>`<div class="hb-row" data-tip="${esc(r.tip||(r.l+' · '+(r.vl??fmt(r.v))))}"><span class="hb-l" title="${esc(r.l)}">${esc(r.l)}</span><span class="hb-t"><b style="width:${r.v>0?Math.max(1.5,r.v/mx*100):0}%;background:${r.c||color}"></b>${r.mk!=null?`<i style="left:calc(${Math.min(100,r.mk/mx*100)}% - 1px)"></i>`:''}</span><span class="hb-v mono">${r.vl??fmt(r.v)}</span></div>`).join('')}</div>`;
+}
+const panel=(t,sub,body,wide)=>`<section class="panel" ${wide?'style="grid-column:1/-1"':''}><div class="panel-h"><h2>${t}</h2>${sub?`<p>${sub}</p>`:''}</div>${body}</section>`;
+const stats=a=>`<div class="stats">${a.map(s=>`<div class="stat"><div class="lab">${s.l}</div><div class="val" ${s.crit?'style="color:var(--crit)"':''}>${s.v}</div>${s.f?`<div class="foot">${s.f}</div>`:''}</div>`).join('')}</div>`;
+const miniTable=(head,rows)=>`<div class="tblwrap"><table class="tbl"><thead><tr>${head.map((h,i)=>`<th ${i?'class="num"':''}>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td ${i?'class="num"':''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+function groupBy(a,f){const m=new Map();a.forEach(x=>{const k=f(x);if(!m.has(k))m.set(k,[]);m.get(k).push(x)});return m}
+
+/* ---------- estado de la UI ---------- */
+const VIEWS=[['dashboard','Dashboard'],['pipeline','Pipeline'],['cuentas','Cuentas'],['contactos','Contactos'],['propuestas','Propuestas'],['facturacion','Facturación'],['proyectos','Proyectos'],['gastos','Gastos'],['config','Configuración']];
+const HAS_REPORT=['pipeline','cuentas','contactos','propuestas','facturacion','proyectos','gastos'];
+const S={view:'dashboard',tab:{},q:{pipe:'',acc:'',con:'',prop:'',gas:''},f:{owner:'',cur:'',sector:'',size:'',estado:'',fuente:'',rol:'',allVers:false,inv:'',gcat:'',gest:'',gmes:'',gtipo:''},drawer:null,hl:null};
+try{const h=location.hash.slice(1);const [v,t]=h.split('-');if(VIEWS.some(x=>x[0]===v)){S.view=v;if(t==='reporte')S.tab[v]='rep'}}catch(e){}
+const tabOf=v=>S.tab[v]||'op';
+
+function navHTML(){
+  const cnt={pipeline:opps.filter(o=>!isClosed(o)).length,cuentas:accounts.length,contactos:contacts.length,
+    propuestas:proposals.filter(p=>['Enviada','Vigente','Borrador'].includes(p.estado)).length,
+    facturacion:invoices.filter(i=>mora(i)>0).length,proyectos:projects.length,dashboard:checkpoints().length,
+    gastos:gastos.filter(g=>gState(g)==='Por aprobar').length,config:''};
+  const alert={facturacion:1,dashboard:1,gastos:1};
+  return VIEWS.map(([k,l])=>`${k==='config'?'<div class="navsep"></div>':''}<button class="navbtn" data-act="nav" data-id="${k}" ${S.view===k?'aria-current="page"':''}><span>${l}</span><span class="cnt mono ${alert[k]&&cnt[k]?'alert':''}">${cnt[k]}</span></button>`).join('');
+}
+function head(eyebrow,title,right=''){
+  const v=S.view,nk={pipeline:'opps',cuentas:'cuentas',contactos:'contactos',propuestas:'propuestas',facturacion:'facturacion',proyectos:'proyectos',gastos:'gastos'}[v];
+  if(DASH&&nk&&CFG.notion[nk])right=`<div class="headr">${right}${nBtn(null,nk,'Abrir base en Notion','btn')}</div>`;
+  const tabs=HAS_REPORT.includes(v)?`<div class="tabs" role="tablist"><button class="tab" role="tab" data-act="tab" data-id="op" aria-selected="${tabOf(v)==='op'}">Operación</button><button class="tab" role="tab" data-act="tab" data-id="rep" aria-selected="${tabOf(v)==='rep'}">Reporte</button></div>`:'';
+  return `<header class="pagehead"><div><p class="eyebrow">${eyebrow}</p><h1>${title}</h1></div>${right}</header>${tabs}`;
+}
+
+/* ---------- Dashboard ---------- */
+function vDashboard(){
+  const K=kpis();
+  const order=['leads','cpl','l2m','m2s','win','ciclo','pipe','fact','ontime','venc','gastos','nps'];
+  const max=Math.max(...STAGES.map(s=>opps.filter(o=>o.stage===s.k).length));
+  const vals=STAGES.map(s=>sum(opps.filter(o=>o.stage===s.k),o=>toPEN(o.value,o.currency)));
+  const maxV=Math.max(...vals);
+  const cps=checkpoints(),feed=agentFeed().slice(0,14);
+  const slaBad=opps.filter(o=>{const s=slaState(o);return s&&s.cls!=='ok'}).length;
+  const cot=proposals.filter(p=>{const c=cadence(p);return c&&c.lvl>=2&&!isClosed(opp(p.oppId))}).length;
+  const moraN=invoices.filter(i=>mora(i)>0).length,riskN=projects.filter(p=>projFlags(p).length).length;
+  const over=GCATS.filter(c=>sum(liveG().filter(g=>g.categoria===c&&inMonth(g.fecha)),gPEN)>(CFG.budget[c]||0));
+  const emptyDb=MODE==='cloud'&&!accounts.length?`<section class="panel empty-state"><h2>La base está vacía</h2><p class="note">Todavía no hay cuentas registradas. Crea la primera y desde su ficha agrega contactos y oportunidades.</p>${W('<button class="btn" data-act="newAcc">+ Nueva cuenta</button>')}</section>`:'';
+  return `${head('Funnel Growth Marketing &amp; IA · 5 fases · 9 agentes','Dashboard general',`<p class="meta mono">Reflejo de Notion · corte ${fmtDY(TODAY)} · TC referencial S/ ${CFG.fx.toFixed(2)} por US$</p>`)}${emptyDb}
+  <section class="kpis" aria-label="Indicadores">${order.map(k=>K[k]).map(k=>`<div class="kpi"><span class="lab">${k.l}${k.sim?'<span class="sim">SIM</span>':''}</span><span class="val">${k.v}</span><span class="foot">${k.f}</span></div>`).join('')}</section>
+  <div class="grid2">
+    <section class="panel"><div class="panel-h"><h2>Funnel por etapa</h2><p>Cantidad y valor bruto (equivalente en S/)</p></div>
+      <div class="funnel"><span class="fh">Etapa</span><span class="fh">Oportunidades</span><span class="fh">Valor</span>
+      ${STAGES.map((s,i)=>{const n=opps.filter(o=>o.stage===s.k).length;return `<span class="fl" style="--c:var(--${s.phase})"><i></i>${s.k}</span>
+        <div class="bar" style="--c:var(--${s.phase})" data-tip="${s.k} · ${n} oportunidades"><b style="width:${max?n/max*100:0}%"></b><span>${n}</span></div>
+        <div class="bar v" style="--c:var(--${s.phase})" data-tip="${s.k} · ${fmtK(vals[i])}"><b style="width:${maxV?vals[i]/maxV*100:0}%"></b><span>${fmtK(vals[i])}</span></div>`}).join('')}
+      <span class="fl" style="--c:var(--proy)"><i></i>Proyecto</span>
+      <div class="bar" style="--c:var(--proy)"><b style="width:${max?projects.length/max*100:0}%"></b><span>${projects.length}</span></div>
+      <div class="bar v" style="--c:var(--proy)"><span>${riskN} en riesgo</span></div></div>
+    </section>
+    <section class="panel"><div class="panel-h"><h2>Decisiones pendientes</h2><p>Se resuelven en Notion · ${cps.length}</p></div>
+      <ul class="cps">${cps.slice(0,8).map(c=>`<li><div class="ct"><b>${esc(c.t)}</b><span>${esc(c.s)}</span></div><button class="btn sm ghost" data-act="${c.act}" data-id="${c.id}">Ver detalle</button></li>`).join('')||'<li><div class="ct"><span>No hay decisiones pendientes.</span></div></li>'}</ul>
+      ${cps.length>8?`<p class="note">+${cps.length-8} más en Propuestas, Facturación y Gastos.</p>`:''}
+    </section>
+  </div>
+  <div class="grid2">
+    <section class="panel"><div class="panel-h"><h2>Actividad reciente</h2><p>Lo que harían los agentes de IA</p></div>
+      <ul class="feed">${feed.map(e=>`<li><span class="when">${relT(e.t)}</span><div><span class="ag" style="--c:var(--${e.user?'ink3':AGFAM[e.ag]||'ink3'})">${e.user?'':'Agente '}${esc(e.ag)}</span><p>${esc(e.x)}</p></div></li>`).join('')}</ul>
+    </section>
+    <section class="panel"><div class="panel-h"><h2>Alertas activas</h2><p>Reglas vigentes en Configuración</p></div>
+      <ul class="cps">
+        <li><div class="ct"><b>${slaBad} MQL sin primer contacto &gt; ${CFG.sla} h</b><span>SLA ${CFG.sla} h · alerta crítica a las ${CFG.slaAlert} h</span></div><button class="btn sm ghost" data-act="nav" data-id="pipeline">Pipeline</button></li>
+        <li><div class="ct"><b>${cot} cotizaciones en día ${CFG.cad2} o más</b><span>Cadencia ${CFG.cad1} / ${CFG.cad2} / ${CFG.cad3} / ${CFG.vig} · la pérdida se decide a mano</span></div><button class="btn sm ghost" data-act="nav" data-id="propuestas">Propuestas</button></li>
+        <li><div class="ct"><b>${moraN} facturas con mora</b><span>1–${CFG.mora1} recordatorio · ${CFG.mora1+1}–${CFG.mora2} aviso · ${CFG.mora2+1}+ checkpoint</span></div><button class="btn sm ghost" data-act="nav" data-id="facturacion">Facturación</button></li>
+        <li><div class="ct"><b>${riskN} clientes en riesgo</b><span>${CFG.riskDays} d sin seguimiento, feedback negativo, mora +${CFG.riskMora} d o menos alcance</span></div><button class="btn sm ghost" data-act="nav" data-id="proyectos">Proyectos</button></li>
+        <li><div class="ct"><b>${over.length} categorías de gasto sobre presupuesto</b><span>${over.length?esc(over.join(', ')):'Todas dentro del presupuesto mensual'}</span></div><button class="btn sm ghost" data-act="nav" data-id="gastos">Gastos</button></li>
+      </ul>
+    </section>
+  </div>`;
+}
+
+/* ---------- Pipeline ---------- */
+function matchPipe(o){
+  const q=S.q.pipe.trim().toLowerCase();
+  if(q){const a=acc(o.accountId),c=con(o.contactId);if(!(a.name+' '+c.name+' '+o.name).toLowerCase().includes(q))return false}
+  if(S.f.owner&&o.owner!==S.f.owner)return false;
+  if(S.f.cur&&o.currency!==S.f.cur)return false;
+  return true;
+}
+function oppCard(o){
+  const a=acc(o.accountId),c=con(o.contactId),sc=score(o),al=oppAlerts(o);
+  const late=o.nextStepDate&&daysBetween(o.nextStepDate,TODAY)>0;
+  return `<article class="card" ${DASH?'':'draggable="true"'} data-id="${o.id}" data-act="openOpp" tabindex="0" aria-label="${esc(a.name)}">
+    <div class="card-top"><strong>${esc(a.name)}</strong>${testB(o)}</div>
+    <div class="card-sub">${esc(c.name)} · ${esc(c.cargo)}</div>
+    <div class="card-row"><span class="mono val">${fmtMoney(o.value,o.currency)}</span><span class="score ${sc>=CFG.mql?'hi':''}" title="Score BANT">${sc} pts</span></div>
+    ${isClosed(o)?`<div class="card-next"><span>${o.stage==='Cerrada-Perdida'?'Motivo: '+esc(o.lossReason):'Cerrada'}</span><span class="mono">${fmtD(o.closedAt)}</span></div>`
+      :`<div class="card-next"><span>${esc(o.nextStep)}</span><span class="mono ${late?'late':''}">${fmtD(o.nextStepDate)}</span></div>`}
+    ${al.length?`<div class="alerts">${al.map(chip).join('')}</div>`:''}
+  </article>`;
+}
+function vPipeline(){
+  const h=head('Reflejo de Notion · solo lectura','Pipeline',`<div class="headr"><div class="rules"><span class="rule">MQL: score ≥ ${CFG.mql}</span><span class="rule">Cotización: BANT ${CFG.bantMin}/4${CFG.bantAB?' con B o A':''}</span><span class="rule">Pérdida: motivo de lista cerrada</span></div>${W('<button class="btn" data-act="newOpp">+ Nueva oportunidad</button>')}</div>`);
+  if(tabOf('pipeline')==='rep')return h+rPipeline();
+  const list=opps.filter(matchPipe);
+  return `${h}<div class="filters">
+    <input type="search" id="q-pipe" data-q="pipe" placeholder="Buscar cuenta, contacto u oportunidad" value="${esc(S.q.pipe)}" aria-label="Buscar">
+    <select id="f-owner" data-f="owner" aria-label="Responsable"><option value="">Todos los responsables</option>${OWNERS.map(x=>`<option ${S.f.owner===x?'selected':''}>${x}</option>`).join('')}</select>
+    <select id="f-cur" data-f="cur" aria-label="Moneda"><option value="">PEN y USD</option><option ${S.f.cur==='PEN'?'selected':''}>PEN</option><option ${S.f.cur==='USD'?'selected':''}>USD</option></select>
+    <span class="count">${list.length} de ${opps.length}</span></div>
+  <div class="board">${STAGES.map(s=>{const os=list.filter(o=>o.stage===s.k).sort((a,b)=>oppAlerts(b).length-oppAlerts(a).length||score(b)-score(a));
+    return `<section class="col" data-stage="${s.k}"><header class="colhead ph-${s.phase}"><span class="dot"></span><h3>${s.k}</h3><span class="mono n">${os.length}</span><div class="colmeta mono">${fmtK(sum(os,o=>toPEN(o.value,o.currency)))} · prob. ${prob(s.k)} %</div></header>
+    <div class="colbody">${os.map(oppCard).join('')||'<p class="empty">Sin oportunidades</p>'}</div></section>`}).join('')}</div>`;
+}
+function rPipeline(){
+  const open=opps.filter(o=>!isClosed(o)),V=o=>toPEN(o.value,o.currency),W=o=>V(o)*prob(o.stage)/100;
+  const stale=open.filter(o=>o.nextStepDate&&daysBetween(o.nextStepDate,TODAY)>0).length;
+  const months=lastMonths(1,3).slice(0);
+  const fc=months.map(m=>({l:m.l,v:sum(open.filter(o=>monthKey(o.closeEst)===m.k),W),sub:`${open.filter(o=>monthKey(o.closeEst)===m.k).length} oportunidades`}));
+  const later=sum(open.filter(o=>monthKey(o.closeEst)>months[months.length-1].k),W);
+  const byOwner=OWNERS.map(ow=>{const os=opps.filter(o=>o.owner===ow),w=os.filter(o=>o.stage==='Cerrada-Ganada').length,l=os.filter(o=>o.stage==='Cerrada-Perdida').length;return{ow,open:os.filter(o=>!isClosed(o)).length,pond:sum(os.filter(o=>!isClosed(o)),W),w,l}});
+  const srcs=[...SOURCES,'Cliente existente'].map(s=>{const os=opps.filter(o=>o.source===s);return{s,n:os.length,m:os.filter(o=>reached(o)>=1).length,q:os.filter(o=>reached(o)>=2).length,w:os.filter(o=>o.stage==='Cerrada-Ganada').length}}).filter(x=>x.n);
+  const lossG=groupBy(opps.filter(o=>o.stage==='Cerrada-Perdida'),o=>o.lossReason);
+  return stats([
+    {l:'Pipeline abierto',v:fmtK(sum(open,V)),f:`${open.length} oportunidades`},
+    {l:'Ponderado',v:fmtK(sum(open,W)),f:'Valor × probabilidad de la etapa'},
+    {l:'Ticket promedio',v:fmtK(avg(open,V)),f:'Oportunidades abiertas'},
+    {l:'Con próximo paso vencido',v:stale,f:`${pct(stale,open.length)} % del pipeline abierto`,crit:stale>0}])+
+  `<div class="grid2e">
+   ${panel('Forecast ponderado','Por mes de cierre estimado',vbars(fc,{label:'Forecast ponderado por mes'})+`<p class="chart-note">Más allá de ${months[months.length-1].l}: ${fmtK(later)} ponderado.</p>`)}
+   ${panel('Pipeline por responsable','Ponderado abierto',hbar(byOwner.map(x=>({l:x.ow,v:x.pond,vl:fmtK(x.pond)})))+miniTable(['Responsable','Abiertas','Ganadas','Perdidas','Tasa de cierre'],byOwner.map(x=>[x.ow,x.open,x.w,x.l,(x.w+x.l?pct(x.w,x.w+x.l)+' %':'—')])))}
+   ${panel('Conversión por fuente','% que llegó a SQL',hbar(srcs.map(x=>({l:x.s,v:pct(x.q,x.n),vl:pct(x.q,x.n)+' %',tip:`${x.s} · ${x.q} de ${x.n} llegaron a SQL`})),{max:100})+miniTable(['Fuente','Leads','→ MQL','→ SQL','Ganadas'],srcs.map(x=>[x.s,x.n,x.m,x.q,x.w])))}
+   ${panel('Antigüedad por etapa','Días promedio desde la creación',hbar(STAGES.slice(0,5).map(s=>{const os=open.filter(o=>o.stage===s.k);return{l:s.k,v:Math.round(avg(os,o=>daysBetween(o.created,TODAY))),vl:Math.round(avg(os,o=>daysBetween(o.created,TODAY)))+' d',c:`var(--${s.phase})`}})))}
+   ${panel('Motivos de pérdida','Lista cerrada',hbar(LOSS.map(r=>({l:r,v:(lossG.get(r)||[]).length})).filter(x=>x.v),{color:'var(--lost)'}))}
+   ${panel('Valor por etapa','Bruto vs ponderado (S/)',miniTable(['Etapa','Cant.','Bruto','Prob.','Ponderado'],STAGES.map(s=>{const os=opps.filter(o=>o.stage===s.k);return[stagePill(s.k),os.length,fmtK(sum(os,V)),prob(s.k)+' %',fmtK(sum(os,V)*prob(s.k)/100)]})))}
+  </div>`;
+}
+
+/* ---------- Cuentas ---------- */
+function vCuentas(){
+  const h=head('Relación 1 → N con contactos y oportunidades','Cuentas',W('<button class="btn" data-act="newAcc">+ Nueva cuenta</button>'));
+  if(tabOf('cuentas')==='rep')return h+rCuentas();
+  const q=S.q.acc.trim().toLowerCase(),sectors=[...new Set(accounts.map(a=>a.sector))].sort();
+  const list=accounts.filter(a=>(!q||a.name.toLowerCase().includes(q))&&(!S.f.sector||a.sector===S.f.sector)&&(!S.f.size||a.size===S.f.size));
+  return `${h}<div class="filters"><input type="search" id="q-acc" data-q="acc" placeholder="Buscar cuenta" value="${esc(S.q.acc)}" aria-label="Buscar cuenta">
+    <select id="f-sector" data-f="sector" aria-label="Sector"><option value="">Todos los sectores</option>${sectors.map(x=>`<option ${S.f.sector===x?'selected':''}>${x}</option>`).join('')}</select>
+    <select id="f-size" data-f="size" aria-label="Tamaño"><option value="">Todos los tamaños</option>${SIZES.map(x=>`<option ${S.f.size===x?'selected':''}>${x}</option>`).join('')}</select>
+    <span class="count">${list.length} cuentas</span></div>
+  <div class="tblwrap"><table class="tbl"><thead><tr><th>Cuenta</th><th>Sector</th><th>Tamaño</th><th>Contactos</th><th>Oportunidad</th><th class="num">Valor</th><th></th></tr></thead><tbody>
+  ${list.map(a=>{const o=opps.find(x=>x.accountId===a.id);return `<tr class="row" data-act="openAcc" data-id="${a.id}"><td class="nm">${esc(a.name)}</td><td>${esc(a.sector)}</td><td class="sm">${a.size}</td><td class="num">${contacts.filter(c=>c.accountId===a.id).length}</td><td>${o?stagePill(o.stage):'—'}</td><td class="num">${o?fmtMoney(o.value,o.currency):'—'}</td><td>${testB(a)}</td></tr>`}).join('')}
+  </tbody></table></div>`;
+}
+function rCuentas(){
+  const V=o=>toPEN(o.value,o.currency);
+  const bySec=[...groupBy(accounts,a=>a.sector)].map(([s,as])=>{const os=opps.filter(o=>as.some(a=>a.id===o.accountId));return{s,n:as.length,open:os.filter(o=>!isClosed(o)).length,won:os.filter(o=>o.stage==='Cerrada-Ganada').length,val:sum(os.filter(o=>!isClosed(o)),V),wonV:sum(os.filter(o=>o.stage==='Cerrada-Ganada'),V)}}).sort((a,b)=>b.val-a.val);
+  const bySize=SIZES.map(z=>{const as=accounts.filter(a=>a.size===z),os=opps.filter(o=>as.some(a=>a.id===o.accountId));return{z,n:as.length,t:avg(os,V)}});
+  const top=opps.slice().sort((a,b)=>V(b)-V(a)).slice(0,10);
+  const act=opps.filter(o=>o.stage==='Cerrada-Ganada').length;
+  return stats([{l:'Cuentas',v:accounts.length,f:`${bySec.length} sectores`},{l:'Con oportunidad abierta',v:opps.filter(o=>!isClosed(o)).length},{l:'Clientes activos',v:act,f:'Con proyecto en curso'},{l:'Ticket promedio',v:fmtK(avg(opps,V)),f:'Todas las oportunidades'}])+
+  `<div class="grid2e">
+   ${panel('Pipeline abierto por sector','Valor bruto (S/)',hbar(bySec.map(x=>({l:x.s,v:x.val,vl:fmtK(x.val),tip:`${x.s} · ${x.open} abiertas · ${fmtK(x.val)}`}))))}
+   ${panel('Resumen por sector','',miniTable(['Sector','Cuentas','Abiertas','Ganadas','Ganado (S/)'],bySec.map(x=>[x.s,x.n,x.open,x.won,x.wonV?fmtK(x.wonV):'—'])))}
+   ${panel('Cuentas por tamaño','Cantidad',hbar(bySize.map(x=>({l:x.z,v:x.n}))))}
+   ${panel('Ticket promedio por tamaño','Valor por oportunidad (S/)',hbar(bySize.map(x=>({l:x.z,v:x.t,vl:fmtK(x.t)}))))}
+   ${panel('Top 10 cuentas por valor','Oportunidad principal',hbar(top.map(o=>({l:acc(o.accountId).name,v:V(o),vl:fmtK(V(o)),c:`var(--${STG[o.stage].phase})`,tip:`${acc(o.accountId).name} · ${o.stage} · ${fmtMoney(o.value,o.currency)}`})))+`<p class="chart-note">El color indica la etapa; pasa el cursor para verla.</p>`,true)}
+  </div>`;
+}
+
+/* ---------- Contactos ---------- */
+function vContactos(){
+  const h=head('Personas de contacto por cuenta','Contactos',W('<button class="btn" data-act="newCon">+ Nuevo contacto</button>'));
+  if(tabOf('contactos')==='rep')return h+rContactos();
+  const q=S.q.con.trim().toLowerCase();
+  const list=contacts.filter(c=>{const a=acc(c.accountId);return(!q||(c.name+' '+a.name+' '+c.email).toLowerCase().includes(q))&&(!S.f.estado||c.estado===S.f.estado)&&(!S.f.fuente||c.fuente===S.f.fuente)&&(!S.f.rol||c.rol===S.f.rol)});
+  const estCls={'Nuevo':'info','En conversación':'warn','Activo':'ok','Inactivo':'mute'};
+  return `${h}<div class="filters"><input type="search" id="q-con" data-q="con" placeholder="Buscar nombre, cuenta o email" value="${esc(S.q.con)}" aria-label="Buscar contacto">
+   <select id="f-estado" data-f="estado" aria-label="Estado"><option value="">Todos los estados</option>${['Nuevo','En conversación','Activo','Inactivo'].map(x=>`<option ${S.f.estado===x?'selected':''}>${x}</option>`).join('')}</select>
+   <select id="f-fuente" data-f="fuente" aria-label="Fuente"><option value="">Todas las fuentes</option>${SOURCES.map(x=>`<option ${S.f.fuente===x?'selected':''}>${x}</option>`).join('')}</select>
+   <select id="f-rol" data-f="rol" aria-label="Rol"><option value="">Todos los roles</option>${ROLES.map(x=>`<option ${S.f.rol===x?'selected':''}>${x}</option>`).join('')}</select>
+   <span class="count">${list.length} contactos</span></div>
+  <div class="tblwrap"><table class="tbl"><thead><tr><th>Nombre</th><th>Cargo</th><th>Cuenta</th><th>Estado</th><th>Rol en la decisión</th><th>Fuente</th><th>Canal</th><th>Email</th><th>Teléfono</th><th></th></tr></thead><tbody>
+  ${list.map(c=>{const a=acc(c.accountId)||{name:'—'},o=opps.find(x=>x.contactId===c.id);return `<tr class="row" data-act="${o?'openOpp':'openAcc'}" data-id="${o?o.id:c.accountId}"><td class="nm nowrap">${esc(c.name)}</td><td class="sm">${esc(c.cargo)}</td><td>${esc(a.name)}</td><td><span class="chip ${estCls[c.estado]}">${c.estado}</span></td><td>${c.rol}</td><td class="sm">${c.fuente}</td><td class="sm">${c.canal}</td><td class="sm mono">${esc(c.email)}</td><td class="sm mono nowrap">${c.phone}</td><td>${testB(c)}</td></tr>`}).join('')}
+  </tbody></table></div>`;
+}
+function rContactos(){
+  const cnt=(arr,f,keys)=>keys.map(k=>({l:k,v:arr.filter(x=>f(x)===k).length}));
+  const withFC=opps.filter(o=>o.mqlAt&&o.firstContactAt);
+  const inSla=withFC.filter(o=>(o.firstContactAt-o.mqlAt)/HOUR<=CFG.sla).length;
+  const avgH=avg(withFC,o=>(o.firstContactAt-o.mqlAt)/HOUR);
+  return stats([{l:'Contactos',v:contacts.length},{l:'Decisores',v:pct(contacts.filter(c=>c.rol==='Decisor').length,contacts.length)+' %',f:'Rol en la decisión'},{l:`SLA ${CFG.sla} h cumplido`,v:pct(inSla,withFC.length)+' %',f:`${inSla} de ${withFC.length} primeros contactos`},{l:'Tiempo a primer contacto',v:Math.round(avgH)+' h',f:'Promedio desde MQL'}])+
+  `<div class="grid2e">
+   ${panel('Por estado','',hbar(cnt(contacts,c=>c.estado,['Nuevo','En conversación','Activo','Inactivo'])))}
+   ${panel('Por fuente','',hbar(cnt(contacts,c=>c.fuente,SOURCES).sort((a,b)=>b.v-a.v)))}
+   ${panel('Rol en la decisión','',hbar(cnt(contacts,c=>c.rol,ROLES)))}
+   ${panel('Canal preferido','',hbar(cnt(contacts,c=>c.canal,CANALES).sort((a,b)=>b.v-a.v)))}
+   ${panel('Horas hasta el primer contacto','Oportunidades que pasaron por MQL',hbar([[0,CFG.sla,`≤ ${CFG.sla} h`],[CFG.sla,CFG.slaAlert,`${CFG.sla}–${CFG.slaAlert} h`],[CFG.slaAlert,1e9,`> ${CFG.slaAlert} h`]].map(([a,b,l],i)=>({l,v:withFC.filter(o=>{const h=(o.firstContactAt-o.mqlAt)/HOUR;return h>a&&h<=b||(i===0&&h===0)}).length,c:['var(--ok)','var(--warn)','var(--crit)'][i]})))+`<p class="chart-note">Horas corridas. Hoy hay ${opps.filter(o=>{const s=slaState(o);return s&&s.cls!=='ok'}).length} MQL sin primer contacto fuera de plazo.</p>`,true)}
+  </div>`;
+}
+
+/* ---------- Propuestas ---------- */
+function propActions(p,o){
+  if(isClosed(o))return'';
+  if(DASH){const c=cadence(p);return needsApproval(p)||(c&&c.lvl===4)?nBtn(p,'propuestas','Decidir en Notion'):''}
+  const b=[];
+  if(needsApproval(p))b.push(`<button class="btn sm" data-act="approveDisc" data-id="${p.id}">Aprobar ${p.discount} %</button>`);
+  if(p.estado==='Borrador')b.push(`<button class="btn sm ghost" data-act="sendProp" data-id="${p.id}">Enviar</button>`);
+  const c=cadence(p);if(c&&c.lvl===4)b.push(`<button class="btn sm danger" data-act="silence" data-id="${o.id}">Decidir cierre</button>`);
+  return b.join(' ');
+}
+function vPropuestas(){
+  const h=head(`Vigencia ${CFG.vig} días desde el envío`,'Propuestas');
+  if(tabOf('propuestas')==='rep')return h+rPropuestas();
+  const q=S.q.prop.trim().toLowerCase();
+  let list=proposals.slice();
+  if(!S.f.allVers)list=list.filter(p=>latestProp(opp(p.oppId))===p);
+  list=list.filter(p=>{const o=opp(p.oppId);return !q||(acc(o.accountId).name+' '+o.name).toLowerCase().includes(q)});
+  list.sort((a,b)=>((cadence(b)||{lvl:-1}).lvl-(cadence(a)||{lvl:-1}).lvl)||(b.sentAt-a.sentAt));
+  const open=proposals.filter(p=>p.estado==='Enviada'),byLvl=l=>open.filter(p=>cadence(p).lvl===l).length;
+  return `${h}${stats([{l:'Enviadas sin respuesta',v:open.length},{l:`Día ${CFG.cad1}–${CFG.cad2-1} · recordatorio`,v:byLvl(1)},{l:`Día ${CFG.cad2}–${CFG.cad3-1} · + llamada`,v:byLvl(2)},{l:`Día ${CFG.cad3}–${CFG.vig-1} · breakup`,v:byLvl(3)},{l:`Día ${CFG.vig}+ · decisión humana`,v:byLvl(4),crit:1}])}
+  <div class="filters"><input type="search" id="q-prop" data-q="prop" placeholder="Buscar cuenta u oportunidad" value="${esc(S.q.prop)}" aria-label="Buscar propuesta">
+    <label><input type="checkbox" id="f-allv" data-f="allVers" ${S.f.allVers?'checked':''}> Ver todas las versiones</label><span class="count">${list.length} propuestas</span></div>
+  <div class="tblwrap"><table class="tbl"><thead><tr><th>Cuenta · oportunidad</th><th>Versión</th><th class="num">Neto</th><th class="num">Desc.</th><th>Aprobador</th><th>Estado</th><th>Enviada</th><th>Válida hasta</th><th>Seguimiento</th><th></th></tr></thead><tbody>
+  ${list.map(p=>{const o=opp(p.oppId),a=acc(o.accountId),c=cadence(p),ap=approverFor(p.discount);
+    return `<tr><td><button class="link" data-act="openOpp" data-id="${o.id}">${esc(a.name)}</button><div class="sm">${esc(p.alcance)}</div></td>
+    <td class="mono">v${p.version}</td><td class="num">${fmtMoney(netOf(p),p.currency)}${p.discount?`<div class="sm">lista ${fmtMoney(p.monto,p.currency)}</div>`:''}</td><td class="num">${p.discount} %</td>
+    <td class="sm">${ap.who}${p.discount>CFG.disc1?(p.approved?' · <span class="chip ok">aprobado</span>':' · <span class="chip warn">pendiente</span>'):''}</td>
+    <td>${p.estado}</td><td class="mono sm nowrap">${p.estado==='Borrador'?'—':fmtD(p.sentAt)}</td><td class="mono sm nowrap">${p.estado==='Borrador'?'—':fmtD(validUntil(p))}</td>
+    <td>${c?chip(c):'<span class="sm">—</span>'}</td><td class="nowrap">${propActions(p,o)}</td></tr>`}).join('')}
+  </tbody></table></div>`;
+}
+function rPropuestas(){
+  const latest=opps.map(latestProp).filter(Boolean);
+  const acc_=latest.filter(p=>p.estado==='Aceptada').length,rej=latest.filter(p=>p.estado==='Rechazada'||(p.estado==='Vencida'&&isClosed(opp(p.oppId)))).length;
+  const live=latest.filter(p=>['Enviada','Vigente'].includes(p.estado));
+  const vers=avg([...groupBy(proposals,p=>p.oppId).values()],a=>a.length);
+  const open=proposals.filter(p=>p.estado==='Enviada');
+  const lv=[['En plazo',0,'var(--ok)'],[`Día ${CFG.cad1}+`,1,'var(--info)'],[`Día ${CFG.cad2}+`,2,'var(--warn)'],[`Día ${CFG.cad3}+`,3,'var(--crit)'],[`Día ${CFG.vig}+`,4,'var(--crit)']];
+  const withDisc=latest.filter(p=>!isClosed(opp(p.oppId))||p.estado==='Aceptada');
+  const tiers=[['Comercial',0],['Alejandro',1],['Alejandro + margen',2]].map(([l,t])=>{const ps=withDisc.filter(p=>approverFor(p.discount).lvl===t);return{l,n:ps.length,m:sum(ps,p=>toPEN(p.monto-netOf(p),p.currency))}});
+  const est=['Borrador','Enviada','Vigente','Aceptada','Rechazada','Vencida'];
+  return stats([{l:'Tasa de aceptación',v:pct(acc_,acc_+rej)+' %',f:`${acc_} aceptadas · ${rej} rechazadas o vencidas`},{l:'Monto en juego',v:fmtK(sum(live,p=>toPEN(netOf(p),p.currency))),f:`${live.length} propuestas enviadas o vigentes`},{l:'Descuento promedio',v:(avg(withDisc,p=>p.discount)).toFixed(1).replace('.',',')+' %',f:'Última versión'},{l:'Versiones por oportunidad',v:vers.toFixed(1).replace('.',','),f:'Promedio'}])+
+  `<div class="grid2e">
+   ${panel('Cadencia de seguimiento','Propuestas enviadas sin respuesta',hbar(lv.map(([l,k,c])=>({l,v:open.filter(p=>cadence(p).lvl===k).length,c}))))}
+   ${panel('Estado de la última versión','Por oportunidad',hbar(est.map(e=>({l:e,v:latest.filter(p=>p.estado===e).length})).filter(x=>x.v)))}
+   ${panel('Descuentos por nivel de aprobación','Monto descontado (S/)',hbar(tiers.map(x=>({l:x.l,v:x.m,vl:fmtK(x.m),tip:`${x.l} · ${x.n} propuestas · ${fmtK(x.m)} descontado`})))+`<p class="chart-note">Rangos actuales: 0–${CFG.disc1} % comercial · ${CFG.disc1+1}–${CFG.disc2} % Alejandro · &gt; ${CFG.disc2} % con revisión de margen.</p>`)}
+   ${panel('Monto enviado por mes','Neto de propuestas enviadas (S/)',vbars(lastMonths(6).map(m=>({l:m.l,v:sum(proposals.filter(p=>p.estado!=='Borrador'&&monthKey(p.sentAt)===m.k),p=>toPEN(netOf(p),p.currency))})),{label:'Monto enviado por mes'}))}
+  </div>`;
+}
+
+/* ---------- Facturación ---------- */
+function vFacturacion(){
+  const h=head('Adelanto · Hito · Recurrente','Facturación y cobranza',`<div class="headr">${W('<button class="btn" data-act="newInv">+ Nueva factura</button>')}<div class="ladder"><span class="chip info">Día 1–${CFG.mora1} recordatorio</span><span class="chip warn">Día ${CFG.mora1+1}–${CFG.mora2} aviso</span><span class="chip crit">Día ${CFG.mora2+1}+ checkpoint humano</span></div></div>`);
+  if(tabOf('facturacion')==='rep')return h+rFacturacion();
+  let list=invoices.slice().sort((a,b)=>mora(b)-mora(a)||(b.issuedAt-a.issuedAt));
+  if(S.f.inv)list=list.filter(i=>payState(i)===S.f.inv);
+  const pend=invoices.filter(i=>!isPaid(i)&&i.estado!=='Borrador'),venc=pend.filter(i=>mora(i)>0);
+  const sm=a=>fmtK(sum(a,i=>toPEN(i.monto,i.currency)));
+  const K=kpis();
+  return `${h}${stats([{l:'Facturación del mes',v:K.fact.v},{l:'Por cobrar',v:sm(pend)},{l:'Vencido',v:sm(venc),crit:1},{l:'Cobrado a tiempo',v:K.ontime.v}])}
+  <div class="filters"><select id="f-inv" data-f="inv" aria-label="Estado de pago"><option value="">Todos los estados</option>${['Borrador','Pendiente','Vencida','Pagada'].map(x=>`<option ${S.f.inv===x?'selected':''}>${x}</option>`).join('')}</select><span class="count">${list.length} comprobantes</span></div>
+  <div class="tblwrap"><table class="tbl"><thead><tr><th>N° comprobante</th><th>Cuenta</th><th>Tipo de cobro</th><th class="num">Monto</th><th>Forma de pago</th><th>Emisión</th><th>Vence</th><th>Estado</th><th class="num">Mora</th><th>Escalamiento</th><th></th></tr></thead><tbody>
+  ${list.map(i=>{const a=acc(i.accountId),m=mora(i),ml=moraLevel(i),ps=payState(i),psc={Pagada:'ok',Pendiente:'info',Vencida:'crit',Borrador:'mute'}[ps];
+    let act='';
+    if(DASH)act=(ps==='Borrador'||(mora(i)>CFG.mora2&&!i.decision))?nBtn(i,'facturacion','Decidir en Notion'):(i.decision?`<span class="sm">${esc(i.decision)}</span>`:'');
+    else if(ps==='Borrador')act=`<button class="btn sm" data-act="validateInv" data-id="${i.id}">Validar</button>`;
+    else if(!isPaid(i)){act=`<button class="btn sm ghost" data-act="payInv" data-id="${i.id}">Registrar pago</button>`;if(m>CFG.mora2)act=(i.decision?`<span class="sm">${esc(i.decision)}</span> `:`<button class="btn sm danger" data-act="moraCp" data-id="${i.id}">Decidir</button> `)+act}
+    return `<tr id="inv-${i.id}" ${S.hl===i.id?'style="outline:2px solid var(--accent);outline-offset:-2px"':''}><td class="mono nowrap">${i.numero} ${testB(i)}</td><td><button class="link" data-act="openAcc" data-id="${a.id}">${esc(a.name)}</button></td><td>${i.tipo}</td><td class="num">${fmtMoney(i.monto,i.currency)}</td><td class="sm">${i.forma}</td><td class="mono sm nowrap">${fmtD(i.issuedAt)}</td><td class="mono sm nowrap">${fmtD(i.dueAt)}</td><td><span class="chip ${psc}">${ps}</span></td><td class="num">${m?m+' d':'—'}</td><td>${ml?chip(ml):'<span class="sm">—</span>'}</td><td class="nowrap">${act}</td></tr>`}).join('')}
+  </tbody></table></div>`;
+}
+function rFacturacion(){
+  const em=invoices.filter(i=>i.estado!=='Borrador'),P=i=>toPEN(i.monto,i.currency);
+  const ms=lastMonths(6);
+  const paid=em.filter(isPaid);
+  const dso=avg(paid,i=>daysBetween(i.issuedAt,i.paidAt));
+  const pend=em.filter(i=>!isPaid(i));
+  const aging=[['Por vencer',i=>mora(i)===0,'var(--ok)'],[`1–${CFG.mora1} d`,i=>mora(i)>0&&mora(i)<=CFG.mora1,'var(--info)'],[`${CFG.mora1+1}–${CFG.mora2} d`,i=>mora(i)>CFG.mora1&&mora(i)<=CFG.mora2,'var(--warn)'],[`${CFG.mora2+1}+ d`,i=>mora(i)>CFG.mora2,'var(--crit)']];
+  const deud=[...groupBy(pend,i=>i.accountId)].map(([a,is])=>({l:acc(a).name,v:sum(is,P)})).sort((a,b)=>b.v-a.v).slice(0,6);
+  return stats([{l:'Facturado · 6 meses',v:fmtK(sum(em.filter(i=>ms.some(m=>m.k===monthKey(i.issuedAt))),P))},{l:'Cobrado',v:fmtK(sum(paid,P)),f:`${paid.length} facturas pagadas`},{l:'Por cobrar',v:fmtK(sum(pend,P)),f:`${pend.length} facturas`},{l:'Días promedio de cobro',v:Math.round(dso)+' d',f:'Emisión → pago'}])+
+  `<div class="grid2e">
+   ${panel('Facturado por mes','Comprobantes emitidos (S/)',vbars(ms.map(m=>({l:m.l,v:sum(em.filter(i=>monthKey(i.issuedAt)===m.k),P),sub:`${em.filter(i=>monthKey(i.issuedAt)===m.k).length} comprobantes`})),{label:'Facturado por mes',color:'var(--venta)'}))}
+   ${panel('Antigüedad de la cartera','Saldo pendiente por tramo (S/)',hbar(aging.map(([l,f,c])=>({l,v:sum(pend.filter(f),P),vl:fmtK(sum(pend.filter(f),P)),c,tip:`${l} · ${pend.filter(f).length} facturas`}))))}
+   ${panel('Por tipo de cobro','Emitido (S/)',hbar(['Adelanto','Hito','Recurrente'].map(t=>({l:t,v:sum(em.filter(i=>i.tipo===t),P),vl:fmtK(sum(em.filter(i=>i.tipo===t),P))})),{color:'var(--venta)'}))}
+   ${panel('Mayores saldos por cobrar','Por cuenta (S/)',hbar(deud.map(d=>({...d,vl:fmtK(d.v)})),{color:'var(--venta)'}))}
+  </div>`;
+}
+
+/* ---------- Proyectos ---------- */
+const FASES=['Fase 0 · Kickoff','Fase 1 · Diagnóstico','Fase 2 · Implementación','Fase 3 · Optimización'];
+function vProyectos(){
+  const h=head('Post-venta · semáforo de salud','Proyectos',`<div class="headr"><div class="rules"><span class="rule">Cliente en riesgo: ${CFG.riskDays} d sin seguimiento · feedback negativo · mora +${CFG.riskMora} d · menos alcance</span></div>${W('<button class="btn" data-act="newProj">+ Nuevo proyecto</button>')}</div>`);
+  if(tabOf('proyectos')==='rep')return h+rProyectos();
+  return `${h}<div class="pboard">${FASES.map((f,fi)=>{const ps=projects.filter(p=>p.fase===fi);return `<section class="pcol"><h3><span>${f}</span><span class="mono">${ps.length}</span></h3>
+   ${ps.map(p=>{const r=projRisk(p),fl=projFlags(p),o=opp(p.oppId);return `<article class="card pcard" data-act="openProj" data-id="${p.id}" tabindex="0">
+     <div class="card-top"><strong>${esc(acc(p.accountId).name)}</strong>${testB(p)}</div>
+     <div class="card-sub">${esc(o.services.join(' + '))}</div>
+     <div class="card-row"><span class="sem ${r.c}"><i></i>${r.t}</span><span class="mono sm">${p.avance} %</span></div>
+     <div class="prog"><b style="width:${p.avance}%"></b></div>
+     <div class="card-row sm"><span class="mono">Margen est. ${p.margenEst} %</span><span class="mono">real ${p.margenReal!=null?p.margenReal+' %':'—'}</span></div>
+     <div class="card-row sm"><span>Gastos directos</span><span class="mono">${fmtK(projCost(p))}</span></div>
+     <div class="card-sub">${p.equipo.join(', ')}</div>
+     ${fl.length?`<div class="riskflag"><b>Cliente en riesgo</b>${fl.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:''}
+   </article>`}).join('')||'<p class="empty">Sin proyectos</p>'}</section>`}).join('')}</div>`;
+}
+function rProyectos(){
+  const withReal=projects.filter(p=>p.margenReal!=null);
+  const openT=tasks.filter(t=>t.estado!=='Hecha');
+  const lateT=openT.filter(t=>daysBetween(t.fecha,TODAY)>0);
+  const risk={g:0,a:0,r:0};projects.forEach(p=>risk[projRisk(p).c]++);
+  return stats([{l:'Proyectos activos',v:projects.length},{l:'Clientes en riesgo',v:projects.filter(p=>projFlags(p).length).length,crit:1},{l:'Avance promedio',v:Math.round(avg(projects,p=>p.avance))+' %'},{l:'Margen real vs estimado',v:withReal.length?`${Math.round(avg(withReal,p=>p.margenReal))} / ${Math.round(avg(withReal,p=>p.margenEst))} %`:'—',f:'Promedio de proyectos con cierre de fase'}])+
+  `<div class="grid2e">
+   ${panel('Margen real vs estimado','Barra: margen real · línea: estimado',hbar(projects.map(p=>({l:acc(p.accountId).name,v:p.margenReal??0,mk:p.margenEst,vl:p.margenReal!=null?`${p.margenReal} % / ${p.margenEst} %`:`— / ${p.margenEst} %`,c:p.margenReal!=null&&p.margenReal<p.margenEst-6?'var(--crit)':'var(--proy)',tip:`${acc(p.accountId).name} · real ${p.margenReal??'—'} % · estimado ${p.margenEst} %`})),{max:60}))}
+   ${panel('Semáforo de salud','Proyectos por estado',hbar([['Verde','g','var(--ok)'],['Ámbar','a','var(--warn)'],['Rojo','r','var(--crit)']].map(([l,k,c])=>({l,v:risk[k],c}))))}
+   ${panel('Gastos directos por proyecto','Freelancers y proveedores imputados (S/)',hbar(projects.map(p=>({l:acc(p.accountId).name,v:projCost(p),vl:`${fmtK(projCost(p))} · ${pct(projCost(p),p.valorNeto)} %`,tip:`${fmtK(projCost(p))} = ${pct(projCost(p),p.valorNeto)} % del valor neto del proyecto`})),{color:'var(--proy)'})+'<p class="chart-note">El porcentaje es sobre el valor neto vendido.</p>')}
+   ${panel('Carga del equipo','Tareas abiertas por responsable',hbar(TEAMN.map(t=>({l:t,v:openT.filter(x=>x.responsable===t).length,tip:`${t} · ${openT.filter(x=>x.responsable===t).length} abiertas · ${lateT.filter(x=>x.responsable===t).length} vencidas`})).filter(x=>x.v),{color:'var(--proy)'})+`<p class="chart-note">${lateT.length} tareas abiertas ya pasaron su fecha límite.</p>`)}
+  </div>`;
+}
+
+/* ---------- Gastos ---------- */
+function matchG(g){
+  const q=S.q.gas.trim().toLowerCase();
+  if(q&&!(g.concepto+' '+g.proveedor).toLowerCase().includes(q))return false;
+  if(S.f.gcat&&g.categoria!==S.f.gcat)return false;
+  if(S.f.gest&&gState(g)!==S.f.gest)return false;
+  if(S.f.gmes&&String(monthKey(g.fecha))!==S.f.gmes)return false;
+  if(S.f.gtipo==='dir'&&!g.projectId)return false;
+  if(S.f.gtipo==='ovh'&&g.projectId)return false;
+  return true;
+}
+function gActions(g){
+  const s=gState(g);
+  if(DASH)return s==='Por aprobar'?nBtn(g,'gastos','Decidir en Notion'):'';
+  if(s==='Por aprobar')return RO?'':`<button class="btn sm" data-act="approveG" data-id="${g.id}">Aprobar</button> <button class="btn sm ghost" data-act="rejectG" data-id="${g.id}">Rechazar</button> <button class="btn sm ghost" data-act="editG" data-id="${g.id}">Editar</button>`;
+  if(RO)return'';
+  const ed=`<button class="btn sm ghost" data-act="editG" data-id="${g.id}">Editar</button>`;
+  if(s==='Registrado'||s==='Aprobado')return `<button class="btn sm ghost" data-act="payG" data-id="${g.id}">Marcar pagado</button> `+ed;
+  if(s==='Rechazado')return `<button class="btn sm ghost" data-act="delG" data-id="${g.id}">Eliminar</button>`;
+  return'';
+}
+function vGastos(){
+  const h=head('Costos propios y directos de proyectos','Gastos',`<div class="headr"><div class="rules"><span class="rule">Aprobación de Alejandro sobre ${fmtS(CFG.gastoUmbral)}</span></div>${W('<button class="btn" data-act="newG">+ Registrar gasto</button>')}</div>`);
+  if(tabOf('gastos')==='rep')return h+rGastos();
+  const gm=liveG().filter(g=>inMonth(g.fecha)),bud=sum(GCATS,c=>CFG.budget[c]||0);
+  const pend=gastos.filter(g=>gState(g)==='Por aprobar');
+  const list=gastos.filter(matchG).sort((a,b)=>b.fecha-a.fecha);
+  const ms=lastMonths(6).reverse();
+  return `${h}${stats([{l:'Gasto del mes',v:fmtK(sum(gm,gPEN)),f:`${gm.length} registros`},{l:'Presupuesto usado',v:pct(sum(gm,gPEN),bud)+' %',f:`de ${fmtK(bud)} mensuales`,crit:sum(gm,gPEN)>bud},{l:'Por aprobar',v:pend.length,f:fmtK(sum(pend,gPEN)),crit:pend.length>0},{l:'Imputado a proyectos',v:pct(sum(gm.filter(g=>g.projectId),gPEN),sum(gm,gPEN))+' %',f:'Gasto directo del mes'}])}
+  <div class="filters">
+    <input type="search" id="q-gas" data-q="gas" placeholder="Buscar concepto o proveedor" value="${esc(S.q.gas)}" aria-label="Buscar gasto">
+    <select id="f-gcat" data-f="gcat" aria-label="Categoría"><option value="">Todas las categorías</option>${GCATS.map(c=>`<option ${S.f.gcat===c?'selected':''}>${c}</option>`).join('')}</select>
+    <select id="f-gest" data-f="gest" aria-label="Estado"><option value="">Todos los estados</option>${['Registrado','Por aprobar','Aprobado','Pagado','Rechazado'].map(c=>`<option ${S.f.gest===c?'selected':''}>${c}</option>`).join('')}</select>
+    <select id="f-gmes" data-f="gmes" aria-label="Mes"><option value="">Últimos 6 meses</option>${ms.map(m=>`<option value="${m.k}" ${S.f.gmes===String(m.k)?'selected':''}>${m.l} ${m.d.getFullYear()}</option>`).join('')}</select>
+    <select id="f-gtipo" data-f="gtipo" aria-label="Imputación"><option value="">Directo y overhead</option><option value="dir" ${S.f.gtipo==='dir'?'selected':''}>Solo directo (proyectos)</option><option value="ovh" ${S.f.gtipo==='ovh'?'selected':''}>Solo overhead</option></select>
+    <span class="count">${list.length} gastos · ${fmtK(sum(list.filter(g=>g.estado!=='Rechazado'),gPEN))}</span></div>
+  <div class="tblwrap"><table class="tbl"><thead><tr><th>Fecha</th><th>Concepto</th><th>Proveedor</th><th>Categoría</th><th>Imputación</th><th>Comprobante</th><th class="num">Monto</th><th>Estado</th><th></th></tr></thead><tbody>
+  ${list.slice(0,150).map(g=>{const s=gState(g),p=g.projectId?proj(g.projectId):null;return `<tr id="g-${g.id}" ${S.hl===g.id?'style="outline:2px solid var(--accent);outline-offset:-2px"':''}><td class="mono sm nowrap">${fmtD(g.fecha)}</td><td>${esc(g.concepto)}${g.recurrente?' <span class="chip mute">recurrente</span>':''} ${testB(g)}</td><td class="sm">${esc(g.proveedor)}</td><td class="sm">${g.categoria}</td><td class="sm">${p?`<button class="link" data-act="openProj" data-id="${p.id}">${esc(acc(p.accountId).name)}</button>`:'Overhead'}</td><td class="sm">${g.comprobante}</td><td class="num">${fmtMoney(g.monto,g.currency)}</td><td><span class="chip ${G_CLS[s]}">${s}</span>${g.motivo?`<div class="sm">${esc(g.motivo)}</div>`:''}</td><td class="nowrap">${gActions(g)}</td></tr>`}).join('')}
+  </tbody></table></div>${list.length>150?`<p class="note">Mostrando 150 de ${list.length}. Usa los filtros para acotar.</p>`:''}`;
+}
+function rGastos(){
+  const L=liveG(),ms=lastMonths(6),gm=L.filter(g=>inMonth(g.fecha)),bud=sum(GCATS,c=>CFG.budget[c]||0);
+  const dayFrac=TODAY.getDate()/new Date(TODAY.getFullYear(),TODAY.getMonth()+1,0).getDate();
+  const byCat=GCATS.map(c=>{const v=sum(gm.filter(g=>g.categoria===c),gPEN),b=CFG.budget[c]||0;return{l:c,v,mk:b,vl:`${fmtK(v)} / ${fmtK(b)}`,c:v>b?'var(--crit)':'var(--accent)',tip:`${c} · ${pct(v,b)} % del presupuesto`}});
+  const prov=[...groupBy(L.filter(g=>ms.some(m=>m.k===monthKey(g.fecha))),g=>g.proveedor)].map(([p,gs])=>({l:p,v:sum(gs,gPEN)})).sort((a,b)=>b.v-a.v).slice(0,8);
+  const cplRows=ms.map(m=>{const ads=sum(L.filter(g=>g.categoria===GCATS[0]&&monthKey(g.fecha)===m.k),gPEN),leads=opps.filter(o=>monthKey(o.created)===m.k).length;return[`${m.l} ${m.d.getFullYear()}`,fmtS(ads),leads,leads?fmtS(ads/leads):'—']});
+  const dir=sum(gm.filter(g=>g.projectId),gPEN),ovh=sum(gm.filter(g=>!g.projectId),gPEN);
+  const fact=sum(invoices.filter(i=>i.estado!=='Borrador'&&inMonth(i.issuedAt)),i=>toPEN(i.monto,i.currency));
+  return stats([{l:'Gasto del mes',v:fmtK(dir+ovh),f:`Día ${TODAY.getDate()}: ${Math.round(dayFrac*100)} % del mes transcurrido`},{l:'Presupuesto usado',v:pct(dir+ovh,bud)+' %',crit:dir+ovh>bud},{l:'Gasto promedio mensual',v:fmtK(avg(ms.slice(0,5),m=>sum(L.filter(g=>monthKey(g.fecha)===m.k),gPEN))),f:'5 meses cerrados'},{l:'Gasto / facturación del mes',v:fact?pct(dir+ovh,fact)+' %':'—',f:`Facturado ${fmtK(fact)}`}])+
+  `<div class="grid2e">
+   ${panel('Presupuesto por categoría','Mes en curso · barra: gasto · línea: presupuesto',hbar(byCat)+'<p class="chart-note">En rojo, las categorías que ya superaron el presupuesto mensual.</p>',true)}
+   ${panel('Gasto total por mes','Sin rechazados (S/)',vbars(ms.map(m=>({l:m.l,v:sum(L.filter(g=>monthKey(g.fecha)===m.k),gPEN)})),{label:'Gasto por mes'}))}
+   ${panel('Directo vs overhead','Mes en curso (S/)',hbar([{l:'Directo (proyectos)',v:dir,vl:fmtK(dir),c:'var(--proy)'},{l:'Overhead',v:ovh,vl:fmtK(ovh)}])+`<p class="chart-note">Directo = freelancers y proveedores imputados a un proyecto.</p>`)}
+   ${panel('Principales proveedores','Últimos 6 meses (S/)',hbar(prov.map(p=>({...p,vl:fmtK(p.v)}))))}
+   ${panel('CPL por mes','Inversión en Ads propia ÷ leads creados',miniTable(['Mes','Inversión Ads','Leads','CPL'],cplRows)+'<p class="chart-note">Los meses antiguos tienen pocos leads porque el set de prueba solo trae oportunidades recientes.</p>')}
+  </div>`;
+}
+
+/* ---------- Configuración ---------- */
+function cfgNum(path,label,help,unit,min=0,max=100000,step=1){
+  const v=path.split('.').reduce((o,k)=>o[k],CFG);
+  return `<div class="cfg-row"><div><b>${label}</b>${help?`<span>${help}</span>`:''}</div><div><input type="number" id="cfg-${path.replace(/[^a-zA-Z0-9]/g,'_')}" data-cfg="${path}" value="${v}" min="${min}" max="${max}" step="${step}" aria-label="${esc(label)}"><div class="unit">${unit||''}</div></div></div>`;
+}
+function cfgBool(path,label,help){
+  const v=path.split('.').reduce((o,k)=>o[k],CFG);
+  return `<div class="cfg-row"><div><b>${label}</b>${help?`<span>${help}</span>`:''}</div><label class="sw"><input type="checkbox" id="cfg-${path.replace(/[^a-zA-Z0-9]/g,'_')}" data-cfgb="${path}" ${v?'checked':''} aria-label="${esc(label)}"></label></div>`;
+}
+function vConfig(){
+  return `${head('Reglas, umbrales y agentes','Configuración',`<button class="btn ghost" data-act="resetCfg">Restablecer valores por defecto</button>`)}
+  <p class="note">${MODE==='cloud'?'Estos umbrales definen cómo se calculan las alertas y los reportes. Se guardan para todo el equipo; los datos del negocio se editan en Notion.':'Modo demo: los cambios se aplican al instante y se recuerdan solo en este navegador.'}</p>
+  <div class="cfggrid">
+   ${panel('Funnel y calificación','Maduración · Scoring',`<div class="cfg">
+     ${cfgNum('mql','Umbral de paso a MQL','Score BANT mínimo (cada check suma 25)','pts',0,100,25)}
+     ${cfgNum('sla','SLA de primer contacto','Horas desde que la oportunidad cruza a MQL','horas',1,240)}
+     ${cfgNum('slaAlert','Alerta crítica de SLA','Horas sin contacto para escalar','horas',1,480)}
+     ${cfgNum('bantMin','BANT mínimo para cotizar','Checks confirmados de 4','de 4',1,4)}
+     ${cfgBool('bantAB','Exigir Presupuesto o Decisor','B o A deben estar entre los checks confirmados')}</div>`)}
+   ${panel('Probabilidad de cierre por etapa','Alimenta el pipeline ponderado',`<div class="cfg">${STAGES.map(s=>cfgNum('prob.'+s.k,s.k,'','%',0,100)).join('')}</div>`)}
+   ${panel('Cotizaciones y descuentos','Seguimiento · Cotización sin respuesta',`<div class="cfg">
+     ${cfgNum('vig','Vigencia de la cotización','Al vencer, la pérdida se decide a mano','días',1,90)}
+     ${cfgNum('cad1','Primer recordatorio','Automático','día',1,60)}
+     ${cfgNum('cad2','Recordatorio + llamada','','día',1,60)}
+     ${cfgNum('cad3','Breakup email','','día',1,60)}
+     ${cfgNum('disc1','Descuento que aprueba el comercial','Hasta este %','%',0,100)}
+     ${cfgNum('disc2','Descuento que aprueba Alejandro','Hasta este %; encima exige revisión de margen','%',0,100)}</div>`)}
+   ${panel('Cobranza y proyectos','Facturación · Recurrente',`<div class="cfg">
+     ${cfgNum('mora1','Fin del recordatorio neutro','Días de mora','días',1,90)}
+     ${cfgNum('mora2','Fin del aviso al responsable','Luego entra el checkpoint humano','días',1,120)}
+     ${cfgNum('riskDays','Cliente en riesgo sin seguimiento','Días desde el último seguimiento','días',1,180)}
+     ${cfgNum('riskMora','Cliente en riesgo por mora','Días de mora de una factura','días',1,120)}</div>`)}
+   ${panel('Gastos y presupuesto mensual','S/ por categoría',`<div class="cfg">
+     ${cfgNum('gastoUmbral','Umbral de aprobación','Gastos mayores requieren aprobación de Alejandro','S/',0,1000000,50)}
+     ${GCATS.map(c=>cfgNum('budget.'+c,c,'','S/ / mes',0,1000000,100)).join('')}</div>`)}
+   ${panel('Agentes de IA','Apaga un agente para simular el proceso manual',`<div class="cfg">${AGENTS.map(a=>`<div class="cfg-row"><div><b>${a.k}</b><span>${a.d} · actúa en ${a.st.join(', ')}</span></div><label class="sw"><input type="checkbox" id="ag-${ascii(a.k).replace(/[^a-z0-9]/gi,'')}" data-agent="${esc(a.k)}" ${agOn(a.k)?'checked':''} aria-label="${esc(a.k)}"></label></div>`).join('')}</div>`)}
+   ${panel('General','',`<div class="cfg">
+     ${cfgNum('fx','Tipo de cambio referencial','S/ por US$ para consolidar reportes','S/',1,10,0.01)}
+     ${cfgBool('showTest','Mostrar badge PRUEBA','Identifica los registros simulados')}
+     <div class="cfg-row"><div><b>Equipo y responsables</b><span>${TEAM.map(t=>`${t[0]} — ${t[1]}`).join('<br>')}</span></div><div class="unit">solo lectura</div></div></div>`)}
+   ${panel('Enlaces a Notion','Destino del botón “Abrir en Notion”',`<div class="cfg">${NOTION_BASES.map(([k,l])=>`<div class="cfg-row" style="grid-template-columns:minmax(0,1fr)"><div><b>${l}</b></div><input type="url" id="cfg-notion-${k}" data-cfgs="notion.${k}" value="${esc(CFG.notion[k]||'')}" placeholder="https://www.notion.so/…" aria-label="Enlace a la base ${l}"></div>`).join('')}<p class="note" style="padding-top:8px">Cuando la sincronización guarde el enlace de cada página, el botón abrirá el registro exacto en vez de la base.</p></div>`)}
+   ${panel('Integraciones','Previstas para la versión productiva',`<div>${[['Notion','Base de datos de cuentas, contactos y oportunidades'],['n8n','Orquestación de los 9 agentes'],['HubSpot / Active Campaign','Nurturing y email marketing'],['Google Ads · Meta Ads','Inversión real para CPL'],['GA4 / Looker Studio','Tráfico y reportes']].map(([n,d])=>`<div class="integ"><div><b>${n}</b><div class="note">${d}</div></div><span class="chip mute">No conectado</span></div>`).join('')}</div>`)}
+  </div>`;
+}
+const VIEWFN={dashboard:vDashboard,pipeline:vPipeline,cuentas:vCuentas,contactos:vContactos,propuestas:vPropuestas,facturacion:vFacturacion,proyectos:vProyectos,gastos:vGastos,config:vConfig};
+
+/* ---------- drawers ---------- */
+function apprLine(d){const ap=approverFor(d);return d<=CFG.disc1?`Aprueba: <b>${ap.who}</b> · se puede enviar directo.`:`Aprueba: <b>${ap.who}</b> · el borrador queda bloqueado hasta la aprobación.`}
+function dOpp(o){
+  const a=acc(o.accountId),c=con(o.contactId),st=STG[o.stage],sc=score(o),closed=isClosed(o);
+  const props=proposals.filter(p=>p.oppId===o.id).sort((x,y)=>y.version-x.version),latest=props[0];
+  const tl=[{t:o.created,x:`Lead creado · fuente ${o.source}`,c:'lead'}];
+  if(o.mqlAt)tl.push({t:o.mqlAt,x:'Pasó a MQL',ag:'Maduración · Scoring',c:'mql'});
+  if(o.firstContactAt&&o.mqlAt)tl.push({t:o.firstContactAt,x:`Primer contacto · ${Math.max(0,Math.round((o.firstContactAt-o.mqlAt)/HOUR))} h después de MQL`,c:'mql'});
+  meetings.filter(m=>m.oppId===o.id).forEach(m=>tl.push({t:m.fecha,x:`Reunión · ${m.tipo}: ${m.resultado}`,c:'sql'}));
+  props.forEach(p=>{if(p.estado!=='Borrador')tl.push({t:p.sentAt,x:`Propuesta v${p.version} enviada · ${fmtMoney(netOf(p),p.currency)}`,c:'sql'})});
+  if(o.closedAt)tl.push({t:o.closedAt,x:o.stage==='Cerrada-Ganada'?'Cerrada-Ganada':'Cerrada-Perdida · '+o.lossReason,c:st.phase});
+  o.log.forEach(l=>tl.push({t:l.t,x:l.x,ag:l.ag,c:AGFAM[l.ag]||'accent'}));
+  tl.sort((x,y)=>y.t-x.t);
+  const sla=slaState(o),next=latest?latest.version+1:1;
+  return `<header class="dh"><div class="dh-top">${stagePill(o.stage)}${testB(o)}<button class="x" data-act="closeDrawer" aria-label="Cerrar">×</button></div>
+   <h2>${esc(o.name)}</h2><p class="dh-sub"><button class="link" data-act="openAcc" data-id="${a.id}">${esc(a.name)}</button> · ${esc(c.name)}, ${esc(c.cargo)} · ${c.rol}</p>${W(`<div class="dactions"><button class="btn sm ghost" data-act="editOpp" data-id="${o.id}">Editar oportunidad</button><button class="btn sm ghost" data-act="newMeet" data-id="${o.id}">+ Reunión / acta</button></div>`)}</header>
+  <div class="dsec">
+    <div class="stagebar">${DASH?nBtn(o,'opps'):`<label class="fld"><span>Mover a etapa</span><select id="stage-sel" data-id="${o.id}" ${closed?'disabled':''}>${STAGES.map(s=>`<option value="${s.k}" ${s.k===o.stage?'selected':''}>${s.k}</option>`).join('')}</select></label>`}
+    ${oppAlerts(o).map(chip).join(' ')}${sla&&sla.cls==='ok'?chip(sla):''}</div>
+    ${!DASH&&o.stage==='MQL'&&!o.firstContactAt?`<div><button class="btn sm ghost" data-act="firstContact" data-id="${o.id}">Registrar primer contacto</button> <span class="note">SLA en horas corridas; las horas hábiles quedan para la versión conectada.</span></div>`:''}
+    <dl class="facts">
+      <div><dt>Valor</dt><dd class="mono">${fmtMoney(o.value,o.currency)}</dd></div>
+      <div><dt>Probabilidad</dt><dd class="mono">${prob(o.stage)} %</dd></div>
+      <div><dt>Ponderado (S/)</dt><dd class="mono">${fmtK(toPEN(o.value,o.currency)*prob(o.stage)/100)}</dd></div>
+      <div><dt>Etapa del funnel</dt><dd>${st.funnel}</dd></div>
+      <div><dt>Score</dt><dd class="mono">${sc} / 100</dd></div>
+      <div><dt>Fuente</dt><dd>${o.source}</dd></div>
+      <div><dt>Responsable</dt><dd>${o.owner}</dd></div>
+      <div><dt>${closed?'Cerrada el':'Cierre estimado'}</dt><dd class="mono">${fmtDY(closed?o.closedAt:o.closeEst)}</dd></div>
+      ${closed?'':`<div style="grid-column:1/-1"><dt>Próximo paso · ${fmtD(o.nextStepDate)} (${relD(o.nextStepDate)})</dt><dd>${esc(o.nextStep)}</dd></div>`}
+      <div style="grid-column:1/-1"><dt>Servicios</dt><dd><div class="agents">${o.services.map(s=>`<span class="pill plain">${esc(s)}</span>`).join('')}</div></dd></div>
+    </dl>
+    ${o.stage==='Cerrada-Perdida'?`<div class="lossbox"><b>Motivo de pérdida:</b> ${esc(o.lossReason)} · perdida desde ${esc(o.lostFrom)}</div>`:''}
+  </div>
+  <div class="dsec"><h3>BANT · score automático</h3>
+    <div class="bant">${BANT.map(([k,l])=>`<label class="bk ${o.bant[k]?'on':''}"><input type="checkbox" id="bant-${k}" data-bant="${k}" data-id="${o.id}" ${o.bant[k]?'checked':''} ${closed||DASH?'disabled':''}><span class="bl mono">${k}</span><span>${l}</span><span class="pts mono">+25</span></label>`).join('')}</div>
+    <div class="gates">
+      <div class="gate"><span>Umbral MQL · score ≥ ${CFG.mql}</span>${sc>=CFG.mql?'<span class="chip ok">cumple</span>':`<span class="chip crit">faltan ${CFG.mql-sc} pts</span>`}</div>
+      <div class="gate"><span>Cotización formal · ${CFG.bantMin} de 4${CFG.bantAB?' con B o A':''}</span>${bantGate(o)?'<span class="chip ok">cumple</span>':'<span class="chip crit">no cumple</span>'}</div>
+    </div>
+    ${o.stage==='Lead'&&sc>=CFG.mql?'<p class="note">Cumple el umbral: ya puedes moverla a MQL.</p>':''}
+  </div>
+  <div class="dsec"><h3>Agentes de IA en esta etapa</h3>
+    <div class="agents">${AGENTS.slice().sort((x,y)=>(y.st.includes(o.stage))-(x.st.includes(o.stage))).map(ag=>{const here=ag.st.includes(o.stage),on=agOn(ag.k);return `<span class="agent ${here&&on?'on':''} ${on?'':'off'}" style="--c:var(--${ag.fam})">${ag.k}${here?`<small>${on?ag.d:'Apagado en Configuración · se hace a mano'}</small>`:''}</span>`}).join('')}</div>
+    <p class="note"><b>Checkpoint humano:</b> ${HUMAN_CP[o.stage].join(' · ')}</p>
+  </div>
+  <div class="dsec"><div class="gate"><h3>Propuestas versionadas</h3>${DASH?nBtn(null,'propuestas','Propuestas en Notion','link'):''}</div>
+    ${props.length?`<div class="tblwrap"><table class="tbl"><thead><tr><th>V</th><th class="num">Neto</th><th class="num">Desc.</th><th>Aprobador</th><th>Estado</th><th>Válida</th><th></th></tr></thead><tbody>
+    ${props.map(p=>{const cc=cadence(p);return `<tr><td class="mono">v${p.version}</td><td class="num">${fmtMoney(netOf(p),p.currency)}</td><td class="num">${p.discount} %</td><td class="sm">${approverFor(p.discount).who}${p.discount>CFG.disc1?(p.approved?' ✓':' · pendiente'):''}</td><td>${p.estado}${cc?`<div>${chip(cc)}</div>`:''}</td><td class="mono sm nowrap">${p.estado==='Borrador'?'—':fmtD(validUntil(p))}</td><td class="nowrap">${propActions(p,o)}</td></tr>`}).join('')}
+    </tbody></table></div><p class="note">Condiciones: ${esc(props[0].condiciones)}</p>`:'<p class="note">Sin propuestas todavía.</p>'}
+    ${closed||DASH?'':`<details class="np"><summary>Nueva versión v${next}</summary>
+      <div class="np-grid">
+        <label>Monto de lista (${o.currency})<input id="np-monto" type="number" min="0" step="100" value="${latest?latest.monto:o.value}"></label>
+        <label>Descuento %<input id="np-disc" type="number" min="0" max="40" step="1" value="0"></label>
+        <label class="full">Alcance<input id="np-alc" value="${esc(latest?latest.alcance:o.services.join(' + '))}"></label>
+        <p class="appr full" id="np-appr">${apprLine(0)}</p>
+      </div>
+      <div style="margin-top:10px"><button class="btn sm" data-act="createProp" data-id="${o.id}">Crear borrador v${next}</button></div>
+    </details>`}
+  </div>
+  <div class="dsec"><div class="gate"><h3>Reuniones y actas</h3>${DASH?nBtn(null,'reuniones','Actas en Notion','link'):''}</div>
+    ${meetings.filter(m=>m.oppId===o.id).sort((x,y)=>y.fecha-x.fecha).map(m=>`<div><b>${m.tipo}</b> <span class="mono sm">· ${fmtDY(m.fecha)}</span><div class="note">Resultado: ${esc(m.resultado)} · Próximos pasos: ${esc(m.proximos)}</div></div>`).join('')||'<p class="note">Sin reuniones registradas.</p>'}
+  </div>
+  <div class="dsec"><h3>Línea de tiempo</h3>
+    <ul class="tl">${tl.map(e=>`<li style="--c:var(--${e.c})"><span class="when">${fmtDY(e.t)}${e.ag?` · ${esc(e.ag)}`:''}</span>${esc(e.x)}</li>`).join('')}</ul>
+  </div>`;
+}
+function dAcc(a){
+  const cs=contacts.filter(c=>c.accountId===a.id),os=opps.filter(o=>o.accountId===a.id),iv=invoices.filter(i=>i.accountId===a.id),ps=projects.filter(p=>p.accountId===a.id);
+  return `<header class="dh"><div class="dh-top"><span class="pill plain">${esc(a.sector)}</span>${testB(a)}<button class="x" data-act="closeDrawer" aria-label="Cerrar">×</button></div><h2>${esc(a.name)}</h2><p class="dh-sub">${a.size}${a.domain?' · '+esc(a.domain):''}</p>${DASH?`<div class="dactions">${nBtn(a,'cuentas')}</div>`:''}${W(`<div class="dactions"><button class="btn sm ghost" data-act="editAcc" data-id="${a.id}">Editar cuenta</button><button class="btn sm ghost" data-act="newCon" data-id="${a.id}">+ Contacto</button><button class="btn sm ghost" data-act="newOpp" data-id="${a.id}">+ Oportunidad</button></div>`)}</header>
+  <div class="dsec"><dl class="facts"><div><dt>Nombre de cuenta</dt><dd>${esc(a.name)}</dd></div><div><dt>Sector</dt><dd>${esc(a.sector)}</dd></div><div><dt>Tamaño</dt><dd>${a.size}</dd></div><div><dt>Dato de prueba</dt><dd>${a.test?'Sí':'No'}</dd></div></dl></div>
+  <div class="dsec"><div class="gate"><h3>Contactos · ${cs.length}</h3>${DASH?nBtn(null,'contactos','Contactos en Notion','link'):''}</div>${cs.map(c=>`<div><b>${esc(c.name)}</b> · ${esc(c.cargo)} <span class="chip mute">${esc(c.rol)}</span> ${W(`<button class="link" data-act="editCon" data-id="${c.id}">Editar</button>`)}<div class="note mono">${[c.email,c.phone,c.linkedin].filter(Boolean).map(esc).join(' · ')}</div><div class="note">Estado ${c.estado} · Fuente ${c.fuente} · Canal preferido ${c.canal}</div></div>`).join('')}</div>
+  <div class="dsec"><h3>Oportunidades · ${os.length}</h3>${os.map(o=>`<div class="gate"><button class="link" data-act="openOpp" data-id="${o.id}">${esc(o.name)}</button><span>${stagePill(o.stage)} <span class="mono sm">${fmtMoney(o.value,o.currency)}</span></span></div>`).join('')}</div>
+  ${iv.length?`<div class="dsec"><h3>Facturación · ${iv.length}</h3>${iv.map(i=>`<div class="gate"><span class="mono sm">${i.numero} · ${i.tipo}</span><span><span class="mono sm">${fmtMoney(i.monto,i.currency)}</span> ${chip({cls:{Pagada:'ok',Pendiente:'info',Vencida:'crit',Borrador:'mute'}[payState(i)],t:payState(i)+(mora(i)?` · ${mora(i)} d`:'')})}</span></div>`).join('')}</div>`:''}
+  ${ps.length?`<div class="dsec"><h3>Proyectos</h3>${ps.map(p=>`<div class="gate"><button class="link" data-act="openProj" data-id="${p.id}">${esc(p.name)}</button><span class="sem ${projRisk(p).c}"><i></i>${FASES[p.fase]}</span></div>`).join('')}</div>`:''}`;
+}
+function dProj(p){
+  const r=projRisk(p),fl=projFlags(p),ts=tasks.filter(t=>t.projectId===p.id),o=opp(p.oppId),gs=gastos.filter(g=>g.projectId===p.id),cost=projCost(p);
+  return `<header class="dh"><div class="dh-top"><span class="pill ph-proy">${FASES[p.fase]}</span>${testB(p)}<button class="x" data-act="closeDrawer" aria-label="Cerrar">×</button></div><h2>${esc(p.name)}</h2><p class="dh-sub"><button class="link" data-act="openAcc" data-id="${p.accountId}">${esc(acc(p.accountId).name)}</button> · origen <button class="link" data-act="openOpp" data-id="${o.id}">${esc(o.name)}</button></p>${W(`<div class="dactions"><button class="btn sm ghost" data-act="editProj" data-id="${p.id}">Editar proyecto</button><button class="btn sm ghost" data-act="newTask" data-id="${p.id}">+ Tarea</button></div>`)}</header>
+  <div class="dsec"><dl class="facts"><div><dt>Riesgo</dt><dd><span class="sem ${r.c}"><i></i>${r.t}</span></dd></div><div><dt>Avance</dt><dd class="mono">${p.avance} %</dd></div><div><dt>Margen estimado</dt><dd class="mono">${p.margenEst} %</dd></div><div><dt>Margen real</dt><dd class="mono">${p.margenReal!=null?p.margenReal+' %':'—'}</dd></div><div><dt>Valor neto vendido</dt><dd class="mono">${fmtK(p.valorNeto)}</dd></div><div><dt>Gastos directos</dt><dd class="mono">${fmtK(cost)} · ${pct(cost,p.valorNeto)} %</dd></div><div><dt>Equipo asignado</dt><dd>${p.equipo.join(', ')}</dd></div><div><dt>Último seguimiento</dt><dd class="mono">${fmtDY(p.lastFollowUp)} (${relD(p.lastFollowUp)})</dd></div></dl>
+    <div class="prog"><b style="width:${p.avance}%"></b></div>
+    ${fl.length?`<div class="riskflag"><b>Cliente en riesgo</b>${fl.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:'<p class="note">Sin banderas de riesgo.</p>'}
+    <div>${DASH?nBtn(p,'proyectos'):`<button class="btn sm ghost" data-act="followUp" data-id="${p.id}">Registrar seguimiento hoy</button>`}</div></div>
+  <div class="dsec"><div class="gate"><h3>Tareas y entregables</h3>${DASH?nBtn(null,'tareas','Tareas en Notion','link'):''}</div><div class="tblwrap"><table class="tbl"><thead><tr><th>Título</th><th>Responsable</th><th>Estado</th><th>Fecha límite</th><th></th></tr></thead><tbody>
+   ${ts.sort((x,y)=>x.fecha-y.fecha).map(t=>`<tr><td>${esc(t.titulo)}</td><td class="sm">${esc(t.responsable)}</td><td>${RO||DASH?`<span class="chip ${t.estado==='Hecha'?'ok':t.estado==='En curso'?'info':'mute'}">${t.estado}</span>`:`<select class="tsel" id="task-${t.id}" data-task="${t.id}" aria-label="Estado de la tarea">${['Pendiente','En curso','Hecha'].map(x=>`<option ${x===t.estado?'selected':''}>${x}</option>`).join('')}</select>`}</td><td class="mono sm nowrap" ${t.estado!=='Hecha'&&daysBetween(t.fecha,TODAY)>0?'style="color:var(--crit)"':''}>${fmtD(t.fecha)}</td><td>${W(`<button class="link" data-act="delTask" data-id="${t.id}">Eliminar</button>`)}</td></tr>`).join('')||'<tr><td colspan="5" class="sm">Sin tareas.</td></tr>'}</tbody></table></div></div>
+  <div class="dsec"><h3>Gastos imputados · ${gs.length}</h3>${gs.length?`<div class="tblwrap"><table class="tbl"><thead><tr><th>Fecha</th><th>Concepto</th><th class="num">Monto</th><th>Estado</th></tr></thead><tbody>${gs.map(g=>`<tr><td class="mono sm nowrap">${fmtD(g.fecha)}</td><td class="sm">${esc(g.concepto)}<div>${esc(g.proveedor)}</div></td><td class="num">${fmtMoney(g.monto,g.currency)}</td><td><span class="chip ${G_CLS[gState(g)]}">${gState(g)}</span></td></tr>`).join('')}</tbody></table></div>`:'<p class="note">Sin gastos directos todavía.</p>'}</div>`;
+}
+function renderDrawer(){
+  const root=$('#drawerRoot');
+  if(S.drawer){const d=S.drawer;if(!(d.type==='opp'?opp(d.id):d.type==='acc'?acc(d.id):proj(d.id)))S.drawer=null}
+  if(!S.drawer){root.innerHTML='';return}
+  const {type,id}=S.drawer;
+  const html=type==='opp'?dOpp(opp(id)):type==='acc'?dAcc(acc(id)):dProj(proj(id));
+  const prev=root.querySelector('.drawer'),same=prev&&prev.dataset.key===type+id,st=same?prev.scrollTop:0;
+  const wasOpen=!!root.querySelector('details.np[open]');
+  root.innerHTML=`<div class="scrim" data-act="closeDrawer"></div><aside class="drawer" data-key="${type+id}" role="dialog" aria-modal="true">${html}</aside>`;
+  root.querySelector('.drawer').scrollTop=st;
+  if(same&&wasOpen){const nd=root.querySelector('details.np');if(nd)nd.open=true}
+}
+
+/* ---------- modal y toast ---------- */
+let modalCb=null;
+function showModal({eyebrow='Checkpoint humano',title,html,ok='Confirmar',danger=false,cancel='Cancelar',onOk,wide=false}){
+  modalCb=onOk||null;
+  $('#modalRoot').innerHTML=`<div class="mscrim"><div class="modal ${wide?'wide':''}" role="dialog" aria-modal="true" aria-labelledby="m-t"><header><p class="eyebrow">${eyebrow}</p><h2 id="m-t">${title}</h2></header><div class="mb">${html}<p class="err" id="m-err"></p></div><footer>${cancel?`<button class="btn ghost" data-act="mCancel">${cancel}</button>`:''}${ok?`<button class="btn ${danger?'danger':''}" data-act="mOk">${ok}</button>`:''}</footer></div></div>`;
+  const f=$('#modalRoot').querySelector('input:not([type=checkbox]),select,button[data-act="mOk"],button[data-act="mCancel"]');if(f)f.focus();
+}
+function closeModal(){$('#modalRoot').innerHTML='';modalCb=null;render()}
+let toastT;
+function toast(m){$('#toastRoot').innerHTML=`<div class="toast" role="status">${esc(m)}</div>`;clearTimeout(toastT);toastT=setTimeout(()=>$('#toastRoot').innerHTML='',3200)}
+
+/* ---------- acciones de negocio ---------- */
+function tryMove(o,to){
+  if(o.stage===to)return render();
+  if(isClosed(o)){showModal({eyebrow:'Regla',title:'Esta oportunidad ya está cerrada',html:'<p>Una oportunidad cerrada no se reabre. Para un nuevo servicio crea otra oportunidad con fuente “Cliente existente” (Recompra).</p>',ok:null,cancel:'Entendido'});return}
+  const ti=STG[to].i;
+  if(to==='Cerrada-Perdida')return lossModal(o);
+  if(ti>=1&&score(o)<CFG.mql){showModal({eyebrow:'Regla · umbral MQL',title:`No puede pasar a ${to}`,html:`<p>El score es <b class="mono">${score(o)} pts</b>. El paso a MQL exige <b>≥ ${CFG.mql} pts</b>.</p><p class="note">Confirma más criterios BANT en la ficha y vuelve a intentarlo.</p>`,ok:'Ir a BANT',onOk:()=>{openDrawer('opp',o.id);return true}});return}
+  if(ti>=3&&ti<=5&&!bantGate(o)){showModal({eyebrow:'Regla · BANT',title:`No puede pasar a ${to}`,html:`<p>Para cotización formal se requieren <b>${CFG.bantMin} de 4</b> criterios confirmados${CFG.bantAB?', incluyendo <b>B · Presupuesto</b> o <b>A · Decisor</b>':''}.</p><p>Estado actual: <span class="mono">${bantN(o)}/4</span> · B ${o.bant.B?'✓':'✗'} · A ${o.bant.A?'✓':'✗'}</p>`,ok:'Ir a BANT',onOk:()=>{openDrawer('opp',o.id);return true}});return}
+  if(to==='Cerrada-Ganada')return wonModal(o);
+  const from=o.stage;o.stage=to;
+  if(ti>=1&&!o.mqlAt)o.mqlAt=new Date();
+  o.nextStep=(NEXT[to]||[''])[0];o.nextStepDate=dOff(3);
+  if(ti>=2)con(o.contactId).estado='En conversación';
+  const AG={'Lead':['Maduración · Alta a nurturing','agregó el contacto a la secuencia de nurturing'],'MQL':['Maduración · Scoring',`confirmó score ≥ ${CFG.mql} y activó el SLA de ${CFG.sla} h`],'SQL-Prospección':['Seguimiento · Post-reunión','preparará el acta del discovery y los próximos pasos'],'SQL-Cotización':['Seguimiento · Cotización sin respuesta',`programó la cadencia día ${CFG.cad1} / ${CFG.cad2} / ${CFG.cad3} / ${CFG.vig}`],'SQL-Negociación':['Seguimiento · Post-reunión','registrará el acta de negociación y las tareas']}[to];
+  o.log.push({t:new Date(),ag:'',x:`Movida de ${from} a ${to}`});
+  if(AG)pushFeed(AG[0],`${AG[1]} · ${acc(o.accountId).name}`,o.id);
+  save('opps',o);save('contacts',con(o.contactId));
+  toast(`${acc(o.accountId).name} → ${to}`);render();
+}
+function lossModal(o,preset){
+  showModal({title:'Marcar como Cerrada-Perdida',html:`<p>${esc(acc(o.accountId).name)} · ${fmtMoney(o.value,o.currency)}</p><p>Elige el motivo. La lista es cerrada para que el reporte de pérdidas sea comparable.</p><div class="opts">${LOSS.map(r=>`<label><input type="radio" name="loss" value="${r}" ${preset===r?'checked':''}> ${r}</label>`).join('')}</div>`,ok:'Marcar perdida',danger:true,
+   onOk:()=>{const v=document.querySelector('input[name=loss]:checked');if(!v){$('#m-err').textContent='Selecciona un motivo de la lista.';return false}
+     const from=o.stage;o.lostFrom=from.startsWith('SQL')?from:'SQL-Prospección';o.stage='Cerrada-Perdida';o.lossReason=v.value;o.closedAt=new Date();
+     const p=latestProp(o);if(p&&['Enviada','Vigente','Borrador'].includes(p.estado))p.estado=v.value==='Silencio'?'Vencida':'Rechazada';
+     con(o.contactId).estado='Inactivo';
+     o.log.push({t:new Date(),ag:'',x:`Cerrada-Perdida · ${v.value} (decisión humana)`});pushFeed('Maduración · Alta a nurturing',`devolverá a ${con(o.contactId).name} a nurturing trimestral tras la pérdida (${v.value})`,o.id);
+     save('opps',o);if(p)save('proposals',p);save('contacts',con(o.contactId));
+     toast('Oportunidad marcada como perdida');return true}});
+}
+function wonModal(o){
+  const p=latestProp(o);
+  if(p&&needsApproval(p)){showModal({eyebrow:'Regla · descuentos',title:'Hay un descuento sin aprobar',html:`<p>La propuesta v${p.version} tiene ${p.discount} % de descuento. Lo aprueba <b>${approverFor(p.discount).who}</b> antes de cerrar.</p>`,ok:null,cancel:'Entendido'});return}
+  const net=p?netOf(p):o.value;
+  showModal({title:'Confirmar Cerrada-Ganada',html:`<p><b>${esc(acc(o.accountId).name)}</b> · ${fmtMoney(net,o.currency)} neto.</p><p>Al confirmar:</p><ul style="margin:0;padding-left:18px"><li>La propuesta ${p?'v'+p.version:'v1'} pasa a <b>Aceptada</b>.</li><li><b>Facturación · Inicial</b> genera la factura de adelanto 50 % como <b>borrador</b> (tú la validas).</li><li><b>Proyectos · Kickoff</b> crea el proyecto en Fase 0.</li></ul>`,ok:'Cerrar como ganada',
+   onOk:()=>{o.stage='Cerrada-Ganada';o.closedAt=new Date();o.nextStep='';o.nextStepDate=null;
+     let pp=p;if(!pp){pp={id:uid('P'),oppId:o.id,version:1,alcance:o.services.join(' + '),monto:o.value,currency:o.currency,discount:0,approved:true,estado:'Aceptada',sentAt:TODAY,condiciones:'50 % adelanto / 50 % contra entrega',test:true};proposals.push(pp)}else pp.estado='Aceptada';
+     const inv={id:uid('I'),numero:nextInvNum(),oppId:o.id,accountId:o.accountId,tipo:'Adelanto',monto:Math.round(netOf(pp)*0.5),currency:o.currency,forma:'Transferencia',issuedAt:TODAY,dueAt:dOff(7),paidAt:null,estado:'Borrador',decision:null,test:true};invoices.push(inv);
+     const a=acc(o.accountId);
+     const pr={id:uid('PR'),oppId:o.id,accountId:a.id,name:`${o.services[0]} — ${a.name.split(' ').slice(0,2).join(' ')}`,fase:0,equipo:[o.owner,pick(TEAMN.filter(x=>x!==o.owner))],avance:0,margenEst:42,margenReal:null,valorNeto:toPEN(netOf(pp),o.currency),lastFollowUp:TODAY,feedbackNeg:false,scopeReduction:false,test:true};projects.push(pr);
+     ['Kickoff y accesos a plataformas','Diagnóstico de funnel y data','Plan de campañas / contenidos'].forEach((t,k)=>tasks.push({id:uid('T'),projectId:pr.id,titulo:t,responsable:pr.equipo[k%pr.equipo.length],estado:'Pendiente',fecha:dOff(5+k*14)}));
+     con(o.contactId).estado='Activo';
+     o.log.push({t:new Date(),ag:'',x:'Cerrada-Ganada (confirmada por humano)'});
+     pushFeed('Facturación · Inicial',`generó borrador ${inv.numero} (adelanto 50 %) para ${a.name} · pendiente de validación`,o.id);
+     pushFeed('Proyectos · Kickoff',`creó el proyecto y la agenda de kickoff para ${a.name}`,o.id);
+     save('opps',o);save('proposals',pp);save('invoices',inv);save('projects',pr);tasks.filter(t=>t.projectId===pr.id).forEach(t=>save('tasks',t));save('contacts',con(o.contactId));
+     toast('Ganada: factura en borrador y proyecto creado');return true}});
+}
+
+/* ---------- persistencia (db compartida) ---------- */
+let DB=null,MODE='loading',RO=false,pending=0,lastSave=null,saveErr=false;
+const COLS=['accounts','contacts','opps','proposals','invoices','projects','tasks','meetings','gastos'];
+const ARR={accounts,contacts,opps,proposals,invoices,projects,tasks,meetings,gastos};
+const loaded=new Set();
+const ISO=/^\d{4}-\d\d-\d\dT\d\d:\d\d/;
+function revive(v){if(typeof v==='string'&&ISO.test(v))return new Date(v);if(Array.isArray(v))return v.map(revive);if(v&&typeof v==='object'){const o={};for(const k in v)o[k]=revive(v[k]);return o}return v}
+const ser=o=>JSON.parse(JSON.stringify(o));
+const uid=p=>p+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const DASH=true;
+const W=h=>(RO||DASH)?'':h;
+const nUrl=(o,key)=>(o&&o.notionUrl)||CFG.notion[key]||'';
+function nBtn(o,key,label='Abrir en Notion',cls='btn sm ghost'){const u=nUrl(o,key);if(!/^https:\/\//.test(u))return `<span class="chip mute" title="Configura el enlace en Configuración › Enlaces a Notion">Sin enlace a Notion</span>`;const page=o&&o.notionUrl;return `<a class="${cls}" href="${esc(u)}" target="_blank" rel="noopener" title="${page?'Abre la página de este registro en Notion':'Abre la base en Notion; con la sincronización conectada abrirá la página de este registro'}"><i aria-hidden="true">↗</i> ${label}</a>`}
+const notionLink=o=>o&&o.notionUrl?`<a class="btn sm ghost" href="${esc(o.notionUrl)}" target="_blank" rel="noopener">Abrir en Notion</a>`:`<span class="chip mute" title="En la versión conectada abre la página de Notion">Se edita en Notion</span>`;
+const isLoading=()=>MODE==='loading'||(MODE==='cloud'&&loaded.size<COLS.length+2);
+const chains={};
+async function writeOnce(fn){try{return await fn()}catch(e){if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,400+Math.random()*600));return fn()}throw e}}
+function onWriteErr(e){
+  const c=e&&e.code;saveErr=true;
+  if(c==='invalid_argument'||c==='not_granted'||c==='revoked'){RO=true;toast('Tu acceso no permite guardar cambios. La vista queda en solo lectura.');render();return}
+  if(c==='quota_exceeded'){toast('La base llegó a su límite de registros. Elimina registros antiguos para crear nuevos.');return}
+  toast('No se pudo guardar un cambio. Revisa tu conexión y vuelve a intentarlo.');
+}
+function persistRaw(path,body){
+  if(MODE!=='cloud'||!DB)return;
+  pending++;updSave();
+  const data=ser(body);
+  chains[path]=(chains[path]||Promise.resolve()).then(()=>writeOnce(()=>DB.doc(path).set(data))).then(()=>{lastSave=new Date();saveErr=false},onWriteErr).finally(()=>{pending--;updSave()});
+}
+function save(col,o){if(o)persistRaw(col+'/'+o.id,o)}
+function removeDoc(col,id){
+  const a=ARR[col],i=a.findIndex(x=>x.id===id);if(i>=0)a.splice(i,1);
+  if(MODE!=='cloud'||!DB)return;
+  pending++;updSave();const path=col+'/'+id;
+  chains[path]=(chains[path]||Promise.resolve()).then(()=>writeOnce(()=>DB.doc(path).delete())).then(()=>{lastSave=new Date()},onWriteErr).finally(()=>{pending--;updSave()});
+}
+function addAct(e){
+  feedUser.push({user:true,...e});
+  if(MODE==='cloud')persistRaw('activity/log',{events:feedUser.slice(-80).map(x=>({t:x.t,ag:x.ag,x:x.x,user:x.user!==false}))});
+}
+function updSave(){
+  const el=$('#savestate');if(!el)return;
+  let cls='',b='',t='';
+  if(MODE==='loading'){b='CONECTANDO';t='Abriendo la base compartida…'}
+  else if(MODE==='demo'){b='MODO DEMO';t='Datos de prueba en memoria. Los cambios no se guardan al recargar.'}
+  else if(RO||DASH){cls='ok';b='REFLEJO DE NOTION';t='Solo lectura. Los datos se editan en Notion; aquí se sincronizarán cada 15 min en la versión conectada.'}
+  else if(pending){cls='busy';b='GUARDANDO…';t=`${pending} cambio${pending>1?'s':''} en curso`}
+  else if(saveErr){cls='err';b='ERROR AL GUARDAR';t='El último cambio no se guardó. Inténtalo de nuevo.'}
+  else{cls='ok';b='GUARDADO';t='Base compartida con tu equipo'+(lastSave?` · último cambio ${pad(lastSave.getHours())}:${pad(lastSave.getMinutes())}`:'')}
+  el.className='side-foot savestate '+cls;el.innerHTML=`<b>${b}</b><span>${t}</span>`;
+}
+let rT;function schedule(){clearTimeout(rT);rT=setTimeout(render,60)}
+function subErr(col,e){loaded.add(col);if(e&&e.code==='revoked')RO=true;toast('No se pudo leer parte de la base ('+col+').');schedule()}
+function subscribeAll(){
+  COLS.forEach(col=>{DB.collection(col).limit(1000).onSnapshot(snap=>{
+    const items=snap.docs.map(d=>{const o=revive(d.data()||{});o.id=o.id||d.id;return o});
+    const a=ARR[col];a.length=0;a.push(...items);loaded.add(col);schedule()},e=>subErr(col,e))});
+  DB.doc('settings/config').onSnapshot(sn=>{if(sn.exists)mergeCfg(sn.data());loaded.add('settings');schedule()},e=>subErr('settings',e));
+  DB.doc('activity/log').onSnapshot(sn=>{const ev=sn.exists?(sn.data().events||[]):[];feedUser.length=0;ev.forEach(x=>feedUser.push({user:true,...revive(x)}));loaded.add('activity');schedule()},e=>subErr('activity',e));
+}
+async function boot(){
+  updSave();render();
+  let db=null;
+  try{if(window.claude&&typeof window.claude.use==='function')db=await window.claude.use('db')}catch(e){db=null}
+  if(!db){MODE='demo';try{const x=localStorage.getItem('jl-crm-cfg');if(x)mergeCfg(JSON.parse(x))}catch(e){}genDemo();render();return}
+  DB=db;MODE='cloud';
+  try{const u=await window.claude.use('user');if(u&&typeof u.can==='function'){const c=await u.can('data.write');if(c===false)RO=true}}catch(e){}
+  render();subscribeAll();
+}
+window.__exportSeed=()=>{const out={};COLS.forEach(c=>out[c]=ARR[c].map(ser));return out};
+
+/* ---------- formularios: crear y editar ---------- */
+const NON_MUT=new Set(['nav','tab','openOpp','openAcc','openProj','closeDrawer','mCancel','mOk','goInv','goGasto']);
+const toInp=d=>d?`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`:'';
+const fromInp=v=>{if(!v)return null;const [y,m,d]=v.split('-').map(Number);return y?new Date(y,m-1,d):null};
+const accOpts=()=>accounts.slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(a=>[a.id,a.name]);
+function conOpts(aid){const cs=contacts.filter(c=>c.accountId===aid);return cs.length?cs.map(c=>[c.id,c.name+(c.cargo?' · '+c.cargo:'')]):[['','— La cuenta no tiene contactos —']]}
+const SECTORS=()=>[...new Set(accounts.map(a=>a.sector).filter(Boolean))].sort();
+function nextInvNum(){const n=Math.max(230,...invoices.map(i=>parseInt(String(i.numero||'').split('-')[1],10)||0));return 'F001-'+String(n+1).padStart(6,'0')}
+function fieldHTML(f){
+  if(f.t==='section')return `<p class="fsec">${esc(f.l)}</p>`;
+  const id='fm-'+f.k,v=f.v??'';let inp;
+  switch(f.t){
+    case 'select':inp=`<select id="${id}">${f.opts.map(o=>{const [val,lab]=Array.isArray(o)?o:[o,o];return `<option value="${esc(val)}" ${String(val)===String(v)?'selected':''}>${esc(lab)}</option>`}).join('')}</select>`;break;
+    case 'multi':inp=`<div class="checks" id="${id}">${f.opts.map(o=>`<label><input type="checkbox" value="${esc(o)}" ${(v||[]).includes(o)?'checked':''}> ${esc(o)}</label>`).join('')}</div>`;break;
+    case 'check':inp=`<label class="chk"><input type="checkbox" id="${id}" ${v?'checked':''}> ${esc(f.cl||'')}</label>`;break;
+    case 'textarea':inp=`<textarea id="${id}" rows="3">${esc(v)}</textarea>`;break;
+    case 'date':inp=`<input type="date" id="${id}" value="${v?toInp(v):''}">`;break;
+    case 'number':inp=`<input type="number" id="${id}" value="${v===null?'':esc(v)}" min="${f.min??0}" ${f.max!=null?`max="${f.max}"`:''} step="${f.step??'any'}">`;break;
+    default:inp=`<input type="${f.t||'text'}" id="${id}" value="${esc(v)}" placeholder="${esc(f.ph||'')}" ${f.list?`list="${id}-dl"`:''}>${f.list?`<datalist id="${id}-dl">${f.list.map(x=>`<option value="${esc(x)}"></option>`).join('')}</datalist>`:''}`;
+  }
+  return `<label class="ff ${f.full?'full':''}"><span>${esc(f.l)}${f.req?' *':''}</span>${inp}</label>`;
+}
+function readForm(fields){const v={};fields.forEach(f=>{if(f.t==='section')return;const el=document.getElementById('fm-'+f.k);if(!el)return;
+  if(f.t==='multi')v[f.k]=[...el.querySelectorAll('input:checked')].map(i=>i.value);
+  else if(f.t==='check')v[f.k]=el.checked;
+  else if(f.t==='number')v[f.k]=el.value===''?null:parseFloat(el.value);
+  else if(f.t==='date')v[f.k]=fromInp(el.value);
+  else v[f.k]=el.value.trim()});return v}
+function formModal({title,eyebrow='Nuevo registro',fields,ok='Guardar',onSave,note}){
+  showModal({eyebrow,title,wide:true,ok,html:`<div class="fgrid">${fields.map(fieldHTML).join('')}</div>${note?`<p class="note">${note}</p>`:''}`,
+    onOk:()=>{const v=readForm(fields);
+      const miss=fields.filter(f=>f.req&&(v[f.k]===''||v[f.k]==null||(Array.isArray(v[f.k])&&!v[f.k].length)));
+      if(miss.length){$('#m-err').textContent='Completa: '+miss.map(f=>f.l).join(', ')+'.';return false}
+      const bad=fields.find(f=>f.t==='number'&&v[f.k]!=null&&(v[f.k]<(f.min??0)||(f.max!=null&&v[f.k]>f.max)));
+      if(bad){$('#m-err').textContent=`${bad.l}: valor fuera de rango.`;return false}
+      const r=onSave(v);if(typeof r==='string'){$('#m-err').textContent=r;return false}return true}});
+}
+const shortName=n=>n.split(' ').slice(0,2).join(' ');
+
+function fAccount(a){return[
+  {k:'name',l:'Nombre de cuenta',req:1,v:a?.name,full:1},
+  {k:'sector',l:'Sector',req:1,v:a?.sector,list:SECTORS()},
+  {k:'size',l:'Tamaño',t:'select',opts:SIZES,v:a?.size||SIZES[0]},
+  {k:'domain',l:'Dominio web',v:a?.domain,ph:'empresa.com.pe',full:1},
+  ...(a?[{k:'test',l:'Dato de prueba',t:'check',v:a.test,cl:'Registro simulado (muestra el badge PRUEBA)'}]:[])]}
+function fContact(c,aid){return[
+  {k:'accountId',l:'Cuenta',t:'select',opts:accOpts(),v:c?.accountId||aid,req:1,full:1},
+  {k:'name',l:'Nombre',req:1,v:c?.name},{k:'cargo',l:'Cargo',v:c?.cargo},
+  {k:'email',l:'Email',t:'email',v:c?.email},{k:'phone',l:'Teléfono',v:c?.phone,ph:'+51 9xx xxx xxx'},
+  {k:'linkedin',l:'LinkedIn',v:c?.linkedin,full:1,ph:'linkedin.com/in/…'},
+  {k:'estado',l:'Estado',t:'select',opts:['Nuevo','En conversación','Activo','Inactivo'],v:c?.estado||'Nuevo'},
+  {k:'fuente',l:'Fuente',t:'select',opts:SOURCES,v:c?.fuente},
+  {k:'rol',l:'Rol en la decisión',t:'select',opts:ROLES,v:c?.rol},
+  {k:'canal',l:'Canal preferido',t:'select',opts:CANALES,v:c?.canal}]}
+function fOpp(o,aid){const a0=o?.accountId||aid||(accOpts()[0]||[''])[0];return[
+  ...(o?[]:[{k:'accountId',l:'Cuenta',t:'select',opts:accOpts(),v:a0,req:1}]),
+  {k:'contactId',l:'Contacto',t:'select',opts:conOpts(a0),v:o?.contactId,req:1,full:!!o},
+  {k:'services',l:'Servicios',t:'multi',opts:SERVICES.map(x=>x[0]),v:o?.services||[],req:1,full:1},
+  {k:'value',l:'Valor',t:'number',v:o?.value,req:1,step:100},
+  {k:'currency',l:'Moneda',t:'select',opts:['PEN','USD'],v:o?.currency||'PEN'},
+  {k:'source',l:'Fuente',t:'select',opts:[...SOURCES,'Cliente existente'],v:o?.source},
+  {k:'owner',l:'Responsable',t:'select',opts:OWNERS,v:o?.owner},
+  {k:'closeEst',l:'Cierre estimado',t:'date',v:o?(o.closeEst||null):dOff(45)},
+  {k:'nextStepDate',l:'Fecha del próximo paso',t:'date',v:o?(o.nextStepDate||null):dOff(2)},
+  {k:'nextStep',l:'Próximo paso',v:o?.nextStep||'',full:1},
+  {k:'name',l:'Nombre de la oportunidad',v:o?.name||'',ph:'Si lo dejas vacío se arma con servicio y cuenta',full:1}]}
+function fGasto(g){return[
+  {k:'concepto',l:'Concepto',req:1,v:g?.concepto,full:1,ph:'Ej. Diseño de piezas para campaña'},
+  {k:'proveedor',l:'Proveedor',req:1,v:g?.proveedor,list:[...new Set(gastos.map(x=>x.proveedor))].sort()},
+  {k:'categoria',l:'Categoría',t:'select',opts:GCATS,v:g?.categoria},
+  {k:'monto',l:'Monto',t:'number',req:1,v:g?.monto,step:0.01},
+  {k:'currency',l:'Moneda',t:'select',opts:['PEN','USD'],v:g?.currency||'PEN'},
+  {k:'fecha',l:'Fecha',t:'date',req:1,v:g?.fecha||TODAY},
+  {k:'comprobante',l:'Comprobante',t:'select',opts:COMPROB,v:g?.comprobante},
+  {k:'projectId',l:'Imputar a',t:'select',opts:[['','Overhead (gasto propio de Jungla Lab)'],...projects.map(p=>[p.id,'Proyecto · '+p.name])],v:g?.projectId||'',full:1},
+  {k:'recurrente',l:'Recurrencia',t:'check',v:g?.recurrente,cl:'Gasto recurrente (mensual)'}]}
+function fProject(p){return[
+  {k:'fase',l:'Fase',t:'select',opts:FASES.map((f,i)=>[i,f]),v:p?.fase??0},
+  {k:'avance',l:'% de avance',t:'number',v:p?.avance??0,min:0,max:100,step:1},
+  {k:'margenEst',l:'Margen estimado %',t:'number',v:p?.margenEst??42,min:0,max:100,step:1},
+  {k:'margenReal',l:'Margen real %',t:'number',v:p?.margenReal??null,min:-100,max:100,step:1},
+  {k:'equipo',l:'Equipo asignado',t:'multi',opts:TEAMN,v:p?.equipo||[],req:1,full:1},
+  {k:'feedbackNeg',l:'Feedback',t:'check',v:p?.feedbackNeg,cl:'Feedback negativo del cliente'},
+  {k:'scopeReduction',l:'Alcance',t:'check',v:p?.scopeReduction,cl:'El cliente redujo el alcance'}]}
+
+const FORMS={
+  newAcc(){formModal({title:'Nueva cuenta',fields:[...fAccount(null),{t:'section',l:'Contacto principal (opcional)'},
+      {k:'c_name',l:'Nombre del contacto'},{k:'c_cargo',l:'Cargo'},{k:'c_email',l:'Email',t:'email'},{k:'c_phone',l:'Teléfono'},
+      {k:'c_rol',l:'Rol en la decisión',t:'select',opts:ROLES},{k:'c_fuente',l:'Fuente',t:'select',opts:SOURCES},{k:'c_canal',l:'Canal preferido',t:'select',opts:CANALES}],
+    onSave:v=>{if(accounts.some(x=>x.name.toLowerCase()===v.name.toLowerCase()))return'Ya existe una cuenta con ese nombre.';
+      const a={id:uid('A'),name:v.name,sector:v.sector,size:v.size,sizeIdx:SIZES.indexOf(v.size),domain:v.domain,test:false,createdAt:new Date()};
+      accounts.push(a);save('accounts',a);
+      if(v.c_name){const c={id:uid('C'),accountId:a.id,name:v.c_name,cargo:v.c_cargo,email:v.c_email,phone:v.c_phone,linkedin:'',estado:'Nuevo',fuente:v.c_fuente,rol:v.c_rol,canal:v.c_canal,test:false};contacts.push(c);save('contacts',c)}
+      addAct({t:new Date(),ag:'Nueva cuenta',x:a.name});S.drawer={type:'acc',id:a.id};toast('Cuenta creada')}})},
+  editAcc(id){const a=acc(id);formModal({eyebrow:'Editar',title:a.name,fields:fAccount(a),ok:'Guardar cambios',
+    onSave:v=>{if(accounts.some(x=>x!==a&&x.name.toLowerCase()===v.name.toLowerCase()))return'Ya existe otra cuenta con ese nombre.';
+      Object.assign(a,{name:v.name,sector:v.sector,size:v.size,sizeIdx:SIZES.indexOf(v.size),domain:v.domain,test:!!v.test});save('accounts',a);toast('Cuenta guardada')}})},
+  newCon(aid){if(!accounts.length){toast('Primero crea una cuenta.');return}
+    formModal({title:'Nuevo contacto',fields:fContact(null,aid),onSave:v=>{
+      const c={id:uid('C'),...v,test:false};contacts.push(c);save('contacts',c);addAct({t:new Date(),ag:'Nuevo contacto',x:`${c.name} · ${acc(c.accountId).name}`});
+      if(aid)S.drawer={type:'acc',id:aid};toast('Contacto creado')}})},
+  editCon(id){const c=con(id);formModal({eyebrow:'Editar',title:c.name,fields:fContact(c),ok:'Guardar cambios',onSave:v=>{Object.assign(c,v);save('contacts',c);toast('Contacto guardado')}})},
+  newOpp(aid){if(!accounts.length){toast('Primero crea una cuenta.');return}
+    formModal({title:'Nueva oportunidad',fields:fOpp(null,aid),note:'Entra al pipeline como Lead con BANT vacío. Confirma los criterios en su ficha para que avance.',onSave:v=>{
+      if(!v.contactId)return'La cuenta no tiene contactos. Crea uno desde la ficha de la cuenta.';
+      if(!(v.value>0))return'Ingresa un valor mayor a 0.';
+      const a=acc(v.accountId),c=con(v.contactId);
+      const o={id:uid('O'),accountId:a.id,contactId:c.id,name:v.name||`${v.services[0]}${v.services.length>1?' +'+(v.services.length-1):''} · ${shortName(a.name)}`,
+        value:v.value,currency:v.currency,services:v.services,stage:'Lead',bant:{A:false,B:false,N:false,T:false},source:v.source,lossReason:null,lostFrom:null,
+        created:new Date(),closeEst:v.closeEst,closedAt:null,nextStep:v.nextStep||NEXT.Lead[0],nextStepDate:v.nextStepDate||dOff(2),owner:v.owner,mqlAt:null,firstContactAt:null,log:[],test:false};
+      opps.push(o);pushFeed('Maduración · Alta a nurturing',`agregó a ${c.name} (${a.name}) a la secuencia de nurturing`,o.id);save('opps',o);
+      S.drawer={type:'opp',id:o.id};toast('Oportunidad creada en Lead')}})},
+  editOpp(id){const o=opp(id);formModal({eyebrow:'Editar',title:o.name,fields:fOpp(o),ok:'Guardar cambios',onSave:v=>{
+      if(!v.contactId)return'Elige un contacto.';if(!(v.value>0))return'Ingresa un valor mayor a 0.';
+      Object.assign(o,{contactId:v.contactId,services:v.services,value:v.value,currency:v.currency,source:v.source,owner:v.owner,closeEst:v.closeEst,nextStepDate:v.nextStepDate,nextStep:v.nextStep,name:v.name||o.name});
+      o.log=o.log||[];o.log.push({t:new Date(),ag:'',x:'Datos de la oportunidad editados'});save('opps',o);toast('Oportunidad guardada')}})},
+  newMeet(id){const o=opp(id),c=con(o.contactId);formModal({title:'Registrar reunión',eyebrow:acc(o.accountId).name,fields:[
+      {k:'tipo',l:'Tipo',t:'select',opts:['Discovery','Presentación de propuesta','Negociación','Seguimiento','Kickoff']},
+      {k:'fecha',l:'Fecha',t:'date',req:1,v:TODAY},
+      {k:'resultado',l:'Resultado',t:'textarea',req:1,full:1},
+      {k:'proximos',l:'Próximos pasos',t:'textarea',full:1},
+      {k:'upd',l:'Pipeline',t:'check',v:true,cl:'Usar como próximo paso de la oportunidad'},
+      {k:'nd',l:'Fecha del próximo paso',t:'date',v:dOff(3)}],
+    onSave:v=>{const m={id:uid('M'),oppId:o.id,accountId:o.accountId,tipo:v.tipo,fecha:v.fecha,resultado:v.resultado,proximos:v.proximos};meetings.push(m);save('meetings',m);
+      if(v.upd&&v.proximos){o.nextStep=v.proximos;o.nextStepDate=v.nd||dOff(3)}
+      pushFeed('Seguimiento · Post-reunión',`enviará el acta de "${v.tipo}" y los próximos pasos a ${c.name}`,o.id);save('opps',o);toast('Reunión registrada')}})},
+  newTask(id){const p=proj(id);formModal({title:'Nueva tarea',eyebrow:p.name,fields:[
+      {k:'titulo',l:'Título',req:1,full:1},{k:'responsable',l:'Responsable',t:'select',opts:TEAMN,v:p.equipo[0]},
+      {k:'fecha',l:'Fecha límite',t:'date',req:1,v:dOff(7)},{k:'estado',l:'Estado',t:'select',opts:['Pendiente','En curso','Hecha']}],
+    onSave:v=>{const t={id:uid('T'),projectId:p.id,...v};tasks.push(t);save('tasks',t);toast('Tarea creada')}})},
+  delTask(id){const t=tasks.find(x=>x.id===id);showModal({eyebrow:'Eliminar',title:'¿Eliminar la tarea?',html:`<p>${esc(t.titulo)}</p><p class="note">No se puede deshacer.</p>`,ok:'Eliminar',danger:true,onOk:()=>{removeDoc('tasks',id);toast('Tarea eliminada');return true}})},
+  editProj(id){const p=proj(id);formModal({eyebrow:'Editar',title:p.name,fields:fProject(p),ok:'Guardar cambios',onSave:v=>{
+      Object.assign(p,{fase:+v.fase,avance:v.avance??0,margenEst:v.margenEst??p.margenEst,margenReal:v.margenReal,equipo:v.equipo,feedbackNeg:!!v.feedbackNeg,scopeReduction:!!v.scopeReduction});save('projects',p);toast('Proyecto guardado')}})},
+  newProj(){const cand=opps.filter(o=>o.stage==='Cerrada-Ganada'&&!projects.some(p=>p.oppId===o.id));
+    if(!cand.length){showModal({eyebrow:'Proyectos',title:'No hay oportunidades ganadas sin proyecto',html:'<p>Los proyectos nacen de una oportunidad Cerrada-Ganada. Al cerrar una como ganada, el proyecto se crea solo.</p>',ok:null,cancel:'Entendido'});return}
+    formModal({title:'Nuevo proyecto',fields:[{k:'oppId',l:'Oportunidad ganada',t:'select',opts:cand.map(o=>[o.id,acc(o.accountId).name+' · '+o.name]),req:1,full:1},...fProject(null).filter(f=>!['avance','margenReal','feedbackNeg','scopeReduction'].includes(f.k))],
+      onSave:v=>{const o=opp(v.oppId),a=acc(o.accountId),lp=latestProp(o);
+        const p={id:uid('PR'),oppId:o.id,accountId:a.id,name:`${o.services[0]} — ${shortName(a.name)}`,fase:+v.fase,equipo:v.equipo,avance:0,margenEst:v.margenEst??42,margenReal:null,valorNeto:toPEN(lp?netOf(lp):o.value,o.currency),lastFollowUp:TODAY,feedbackNeg:false,scopeReduction:false,test:false};
+        projects.push(p);save('projects',p);pushFeed('Proyectos · Kickoff',`creó tablero y agenda de kickoff para ${a.name}`,o.id);save('opps',o);S.drawer={type:'proj',id:p.id};toast('Proyecto creado')}})},
+  newInv(){if(!opps.length){toast('Primero crea una oportunidad.');return}
+    const os=opps.slice().sort((a,b)=>(b.stage==='Cerrada-Ganada')-(a.stage==='Cerrada-Ganada')||acc(a.accountId).name.localeCompare(acc(b.accountId).name,'es'));
+    formModal({title:'Nueva factura',fields:[
+      {k:'oppId',l:'Oportunidad',t:'select',opts:os.map(o=>[o.id,`${acc(o.accountId).name} · ${o.name}${o.stage==='Cerrada-Ganada'?'':' ('+o.stage+')'}`]),req:1,full:1},
+      {k:'numero',l:'N° de comprobante',req:1,v:nextInvNum()},{k:'tipo',l:'Tipo de cobro',t:'select',opts:['Adelanto','Hito','Recurrente']},
+      {k:'monto',l:'Monto',t:'number',req:1,step:0.01},{k:'currency',l:'Moneda',t:'select',opts:['PEN','USD']},
+      {k:'forma',l:'Forma de pago',t:'select',opts:['Transferencia','Depósito en cuenta','Tarjeta corporativa']},
+      {k:'issuedAt',l:'Fecha de emisión',t:'date',req:1,v:TODAY},{k:'dias',l:'Días de crédito',t:'number',v:15,min:0,max:120,step:1}],
+    onSave:v=>{if(invoices.some(i=>i.numero===v.numero))return'Ese número de comprobante ya existe.';if(!(v.monto>0))return'Ingresa un monto mayor a 0.';
+      const o=opp(v.oppId);const i={id:uid('I'),numero:v.numero,oppId:o.id,accountId:o.accountId,tipo:v.tipo,monto:v.monto,currency:v.currency,forma:v.forma,issuedAt:v.issuedAt,dueAt:new Date(v.issuedAt.getTime()+(v.dias||0)*DAY),paidAt:null,estado:'Emitida',decision:null,test:false};
+      invoices.push(i);save('invoices',i);addAct({t:new Date(),ag:'Nueva factura',x:`${i.numero} · ${acc(i.accountId).name} · ${fmtMoney(i.monto,i.currency)}`});toast('Factura registrada')}})},
+  newG(){formModal({title:'Registrar gasto',fields:fGasto(null),note:`Los gastos mayores a ${fmtS(CFG.gastoUmbral)} quedan “Por aprobar” hasta que Alejandro los apruebe.`,onSave:v=>{
+      if(!(v.monto>0))return'Ingresa un monto mayor a 0.';
+      const g={id:uid('G'),...v,projectId:v.projectId||null,recurrente:!!v.recurrente,responsable:'Alejandro L.',estado:'Registrado',test:false};
+      gastos.push(g);save('gastos',g);S.hl=g.id;addAct({t:new Date(),ag:'Registro de gasto',x:`${g.concepto} · ${fmtMoney(g.monto,g.currency)}${reqApproval(g)?' · pendiente de aprobación':''}`});
+      toast(reqApproval(g)?'Gasto registrado · queda por aprobar':'Gasto registrado')}})},
+  editG(id){const g=gastos.find(x=>x.id===id);formModal({eyebrow:'Editar',title:g.concepto,fields:fGasto(g),ok:'Guardar cambios',onSave:v=>{
+      if(!(v.monto>0))return'Ingresa un monto mayor a 0.';
+      const before=reqApproval(g);Object.assign(g,{...v,projectId:v.projectId||null,recurrente:!!v.recurrente});
+      if(reqApproval(g)&&!before&&g.estado==='Aprobado')g.estado='Registrado';
+      save('gastos',g);toast(gState(g)==='Por aprobar'?'Gasto guardado · vuelve a requerir aprobación':'Gasto guardado')}})},
+  delG(id){const g=gastos.find(x=>x.id===id);showModal({eyebrow:'Eliminar',title:'¿Eliminar el gasto rechazado?',html:`<p>${esc(g.concepto)} · ${fmtMoney(g.monto,g.currency)}</p><p class="note">No se puede deshacer.</p>`,ok:'Eliminar',danger:true,onOk:()=>{removeDoc('gastos',id);toast('Gasto eliminado');return true}})},
+};
+
+/* ---------- navegación y render ---------- */
+function openDrawer(type,id){S.drawer={type,id};renderDrawer()}
+function syncHash(){try{history.replaceState(null,'','#'+S.view+(tabOf(S.view)==='rep'?'-reporte':''))}catch(e){}}
+function setView(v){S.view=v;S.drawer=null;syncHash();render();window.scrollTo(0,0)}
+function render(){
+  const ae=document.activeElement,aid=ae&&ae.id,sel=ae&&typeof ae.selectionStart==='number'?ae.selectionStart:null;
+  const gOpen=!!document.querySelector('.main details.np[open]');
+  $('#nav').innerHTML=navHTML();
+  $('#main').innerHTML=isLoading()?`<section class="panel"><h2>Cargando la base compartida…</h2><p class="note">Leyendo cuentas, oportunidades, facturas y gastos.</p></section>`:VIEWFN[S.view]();
+  updSave();
+  if(gOpen){const d=document.querySelector('.main details.np');if(d)d.open=true}
+  if(!isLoading())renderDrawer();
+  if(aid){const el=document.getElementById(aid);if(el&&el!==document.activeElement){el.focus();if(sel!=null&&el.setSelectionRange)try{el.setSelectionRange(sel,sel)}catch(e){}}}
+}
+function focusRow(id){setTimeout(()=>{const r=document.getElementById(id);if(r)r.scrollIntoView({block:'center'})},30)}
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');if(!t)return;
+  const act=t.dataset.act,id=t.dataset.id;
+  if((RO||(DASH&&act!=='resetCfg'))&&!NON_MUT.has(act)){toast('Los datos se editan en Notion; aquí son solo lectura.');return}
+  if(FORMS[act]){FORMS[act](id);return}
+  switch(act){
+    case 'nav':setView(id);break;
+    case 'tab':S.tab[S.view]=id;syncHash();render();break;
+    case 'openOpp':openDrawer('opp',id);break;
+    case 'openAcc':openDrawer('acc',id);break;
+    case 'openProj':openDrawer('proj',id);break;
+    case 'closeDrawer':S.drawer=null;renderDrawer();break;
+    case 'mCancel':closeModal();break;
+    case 'mOk':{const keep=modalCb?modalCb()===false:false;if(!keep)closeModal();break}
+    case 'goInv':S.hl=id;S.f.inv='';S.tab.facturacion='op';setView('facturacion');focusRow('inv-'+id);break;
+    case 'goGasto':S.hl=id;Object.assign(S.f,{gcat:'',gest:'',gmes:'',gtipo:''});S.q.gas='';S.tab.gastos='op';setView('gastos');focusRow('g-'+id);break;
+    case 'approveDisc':{const p=proposals.find(x=>x.id===id),o=opp(p.oppId),ap=approverFor(p.discount);
+      showModal({title:`Aprobar descuento de ${p.discount} %`,html:`<p>${esc(acc(o.accountId).name)} · v${p.version} · neto ${fmtMoney(netOf(p),p.currency)} (lista ${fmtMoney(p.monto,p.currency)}).</p><p>Rango ${ap.lvl===1?`${CFG.disc1+1}–${CFG.disc2} %`:`&gt; ${CFG.disc2} %`} → aprueba <b>${ap.who}</b>.</p>${ap.lvl===2?`<div class="opts"><label><input type="checkbox" id="m-margin"> Revisé el margen: el proyecto sigue sobre el mínimo acordado</label></div>`:''}`,ok:'Aprobar',
+        onOk:()=>{if(ap.lvl===2&&!$('#m-margin').checked){$('#m-err').textContent=`Confirma la revisión de margen para aprobar un descuento mayor a ${CFG.disc2} %.`;return false}p.approved=true;o.log.push({t:new Date(),ag:'',x:`Descuento ${p.discount} % aprobado por ${ap.who}`});save('proposals',p);save('opps',o);toast('Descuento aprobado');return true}});break}
+    case 'sendProp':{const p=proposals.find(x=>x.id===id),o=opp(p.oppId);
+      if(needsApproval(p)){showModal({eyebrow:'Regla · descuentos',title:'Falta aprobar el descuento',html:`<p>Un descuento de ${p.discount} % lo aprueba <b>${approverFor(p.discount).who}</b>. Apruébalo antes de enviar.</p>`,ok:null,cancel:'Entendido'});break}
+      if(!bantGate(o)){showModal({eyebrow:'Regla · BANT',title:'Aún no califica para cotización formal',html:`<p>Se requieren ${CFG.bantMin} de 4 criterios BANT${CFG.bantAB?', incluyendo Presupuesto o Decisor':''}.</p>`,ok:null,cancel:'Entendido'});break}
+      proposals.filter(x=>x.oppId===o.id&&x!==p&&(x.estado==='Enviada'||x.estado==='Vigente')).forEach(x=>x.estado='Vencida');
+      p.estado='Enviada';p.sentAt=TODAY;
+      if(STG[o.stage].i<3){o.stage='SQL-Cotización';o.nextStep='Seguimiento a cotización enviada';o.nextStepDate=dOff(CFG.cad1)}
+      o.log.push({t:new Date(),ag:'',x:`Propuesta v${p.version} enviada`});pushFeed('Seguimiento · Cotización sin respuesta',`programó recordatorios día ${CFG.cad1}, ${CFG.cad2} y ${CFG.cad3} para la v${p.version} de ${acc(o.accountId).name}`,o.id);proposals.filter(x=>x.oppId===o.id).forEach(x=>save('proposals',x));save('opps',o);toast(`v${p.version} enviada · vigente hasta ${fmtD(validUntil(p))}`);render();break}
+    case 'createProp':{const o=opp(id),m=parseFloat($('#np-monto').value),d=Math.max(0,parseFloat($('#np-disc').value)||0),al=$('#np-alc').value.trim();
+      if(!(m>0)){toast('Ingresa un monto mayor a 0');break}
+      const v=(latestProp(o)?.version||0)+1;
+      const np={id:uid('P'),oppId:o.id,version:v,alcance:al||o.services.join(' + '),monto:m,currency:o.currency,discount:d,approved:false,estado:'Borrador',sentAt:TODAY,condiciones:latestProp(o)?.condiciones||'50 % adelanto / 50 % contra entrega',test:false};
+      proposals.push(np);
+      o.log.push({t:new Date(),ag:'',x:`Borrador v${v} creado · descuento ${d} %`});save('proposals',np);save('opps',o);toast(`Borrador v${v} creado`+(d>CFG.disc1?` · requiere aprobación de ${approverFor(d).who}`:''));render();break}
+    case 'silence':lossModal(opp(id),'Silencio');break;
+    case 'firstContact':{const o=opp(id);o.firstContactAt=new Date();con(o.contactId).estado='En conversación';o.log.push({t:new Date(),ag:'',x:'Primer contacto registrado'});save('opps',o);save('contacts',con(o.contactId));toast('Primer contacto registrado');render();break}
+    case 'validateInv':{const i=invoices.find(x=>x.id===id);showModal({title:`Validar ${i.numero}`,html:`<p>${esc(acc(i.accountId).name)} · ${i.tipo} · <b>${fmtMoney(i.monto,i.currency)}</b></p><p>Revisa RUC, monto y condiciones antes de emitir. En el prototipo no se envía nada.</p>`,ok:'Validar y emitir',onOk:()=>{i.estado='Emitida';i.issuedAt=TODAY;i.dueAt=dOff(7);pushFeed('Facturación · Inicial',`emitió ${i.numero} tras validación humana`,i.oppId);save('invoices',i);if(opp(i.oppId))save('opps',opp(i.oppId));toast('Factura emitida');return true}});break}
+    case 'payInv':{const i=invoices.find(x=>x.id===id);i.paidAt=new Date();i.estado='Pagada';pushFeed('Facturación · Recurrente',`registró el pago de ${i.numero} (${acc(i.accountId).name})`,i.oppId);save('invoices',i);if(opp(i.oppId))save('opps',opp(i.oppId));toast('Pago registrado');render();break}
+    case 'moraCp':{const i=invoices.find(x=>x.id===id);const OPTS=['Llamada del responsable de cuenta','Acordar cronograma de pago','Pausar servicios hasta regularizar','Derivar a cobranza externa'];
+      showModal({title:`Cobranza · ${mora(i)} días de mora`,html:`<p>${esc(acc(i.accountId).name)} · ${i.numero} · ${fmtMoney(i.monto,i.currency)}</p><p>Desde el día ${CFG.mora2+1} el agente se detiene y la decisión es humana.</p><div class="opts">${OPTS.map(o=>`<label><input type="radio" name="cp" value="${o}"> ${o}</label>`).join('')}</div>`,ok:'Registrar decisión',
+        onOk:()=>{const v=document.querySelector('input[name=cp]:checked');if(!v){$('#m-err').textContent='Elige una acción.';return false}i.decision=v.value;save('invoices',i);addAct({t:new Date(),ag:'Checkpoint de cobranza',x:`${v.value} · ${i.numero}`,user:true});toast('Decisión registrada');return true}});break}
+    case 'followUp':{const p=proj(id);p.lastFollowUp=TODAY;save('projects',p);addAct({t:new Date(),ag:'Seguimiento de proyecto',x:`registró seguimiento con ${acc(p.accountId).name}`,user:true});toast('Seguimiento registrado');render();break}
+    case 'approveG':{const g=gastos.find(x=>x.id===id);showModal({title:`Aprobar gasto de ${fmtMoney(g.monto,g.currency)}`,html:`<p>${esc(g.concepto)} · ${esc(g.proveedor)}</p><p>${g.categoria} · ${g.projectId?'imputado a '+esc(proj(g.projectId).name):'overhead'}.</p><p class="note">Supera el umbral de ${fmtS(CFG.gastoUmbral)}: lo aprueba Alejandro.</p>`,ok:'Aprobar',onOk:()=>{g.estado='Aprobado';save('gastos',g);toast('Gasto aprobado');return true}});break}
+    case 'rejectG':{const g=gastos.find(x=>x.id===id);const OPTS=['Sin presupuesto disponible','Fuera de la política de gastos','Registro duplicado','Falta comprobante válido'];
+      showModal({title:'Rechazar gasto',html:`<p>${esc(g.concepto)} · ${fmtMoney(g.monto,g.currency)}</p><div class="opts">${OPTS.map(o=>`<label><input type="radio" name="gr" value="${o}"> ${o}</label>`).join('')}</div>`,ok:'Rechazar',danger:true,onOk:()=>{const v=document.querySelector('input[name=gr]:checked');if(!v){$('#m-err').textContent='Elige un motivo.';return false}g.estado='Rechazado';g.motivo=v.value;save('gastos',g);toast('Gasto rechazado');return true}});break}
+    case 'payG':{const g=gastos.find(x=>x.id===id);g.estado='Pagado';save('gastos',g);toast('Gasto marcado como pagado');render();break}
+    case 'resetCfg':showModal({eyebrow:'Configuración',title:'Restablecer valores por defecto',html:'<p>Vuelven los umbrales del Blueprint, las probabilidades por etapa, los presupuestos y todos los agentes encendidos.</p>',ok:'Restablecer',onOk:()=>{CFG=JSON.parse(JSON.stringify(CFG_DEFAULT));AGENTS.forEach(a=>CFG.agents[a.k]=true);saveCfg();toast('Configuración restablecida');return true}});break;
+  }
+});
+function validateCfg(){
+  if(CFG.disc1>=CFG.disc2)return'El límite del comercial debe ser menor que el de Alejandro.';
+  if(CFG.mora1>=CFG.mora2)return'El fin del recordatorio debe ser menor que el fin del aviso.';
+  if(!(CFG.cad1<CFG.cad2&&CFG.cad2<CFG.cad3&&CFG.cad3<CFG.vig))return'Los recordatorios deben ir en orden y antes del vencimiento.';
+  if(CFG.sla>=CFG.slaAlert)return'La alerta crítica debe ser mayor que el SLA.';
+  return null;
+}
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.dataset.q!==undefined){S.q[t.dataset.q]=t.value;render()}
+  if(t.id==='np-disc'){const el=$('#np-appr');if(el)el.innerHTML=apprLine(Math.max(0,parseFloat(t.value)||0))}
+});
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.dataset.f!==undefined){S.f[t.dataset.f]=t.type==='checkbox'?t.checked:t.value;render();return}
+  if(t.id==='fm-accountId'&&document.getElementById('fm-contactId')){$('#fm-contactId').innerHTML=conOpts(t.value).map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('');return}
+  if(DASH&&(t.dataset.bant||t.id==='stage-sel'||t.dataset.task)){render();return}
+  if(RO&&(t.dataset.bant||t.id==='stage-sel'||t.dataset.cfg||t.dataset.cfgb||t.dataset.agent||t.dataset.task)){toast('Tu acceso es de solo lectura.');render();return}
+  if(t.dataset.task){const k=tasks.find(x=>x.id===t.dataset.task);if(k){k.estado=t.value;save('tasks',k);toast('Tarea actualizada');render()}return}
+  if(t.dataset.bant){const o=opp(t.dataset.id);o.bant[t.dataset.bant]=t.checked;o.log.push({t:new Date(),ag:agOn('Maduración · Scoring')?'Maduración · Scoring':'',x:`Score recalculado: ${score(o)} pts (${t.dataset.bant} ${t.checked?'confirmado':'desmarcado'})`});save('opps',o);render();return}
+  if(t.id==='stage-sel'){tryMove(opp(t.dataset.id),t.value);return}
+  if(t.dataset.cfg){const path=t.dataset.cfg.split('.'),v=parseFloat(t.value);
+    const obj=path.slice(0,-1).reduce((o,k)=>o[k],CFG),k=path[path.length-1],old=obj[k];
+    if(!isFinite(v)||v<parseFloat(t.min)||v>parseFloat(t.max)){toast(`Valor fuera de rango (${t.min}–${t.max})`);render();return}
+    obj[k]=v;const err=validateCfg();if(err){obj[k]=old;toast(err);render();return}
+    saveCfg();toast('Configuración guardada');render();return}
+  if(t.dataset.cfgs){if(RO){toast('Tu acceso es de solo lectura.');render();return}const [a,k]=t.dataset.cfgs.split('.'),v=t.value.trim();if(v&&!/^https:\/\/[^\s]+$/.test(v)){toast('Pega un enlace completo que empiece con https://');render();return}CFG[a][k]=v;saveCfg();toast('Enlace guardado');render();return}
+  if(t.dataset.cfgb){CFG[t.dataset.cfgb]=t.checked;saveCfg();toast('Configuración guardada');render();return}
+  if(t.dataset.agent){CFG.agents[t.dataset.agent]=t.checked;saveCfg();toast(`${t.dataset.agent} ${t.checked?'encendido':'apagado'}`);render();return}
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){if($('#modalRoot').innerHTML)closeModal();else if(S.drawer){S.drawer=null;renderDrawer()}}
+  if(e.key==='Enter'&&e.target.matches('.card[data-act]'))e.target.click();
+});
+/* drag & drop */
+document.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.card[draggable]');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.id);e.dataTransfer.effectAllowed='move';c.classList.add('dragging')});
+document.addEventListener('dragend',()=>{document.querySelectorAll('.dragging,.over').forEach(x=>x.classList.remove('dragging','over'))});
+document.addEventListener('dragover',e=>{const col=e.target.closest&&e.target.closest('.col');if(!col)return;e.preventDefault();document.querySelectorAll('.col.over').forEach(x=>x!==col&&x.classList.remove('over'));col.classList.add('over')});
+document.addEventListener('drop',e=>{const col=e.target.closest&&e.target.closest('.col');if(!col)return;e.preventDefault();col.classList.remove('over');const o=opp(e.dataTransfer.getData('text/plain'));if(o)tryMove(o,col.dataset.stage)});
+/* tooltip */
+const tipEl=$('#tip');
+document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');if(!t){tipEl.hidden=true;return}tipEl.textContent=t.getAttribute('data-tip');tipEl.hidden=false;const w=tipEl.offsetWidth;tipEl.style.left=Math.min(e.clientX+14,innerWidth-w-8)+'px';tipEl.style.top=(e.clientY+16)+'px'});
+document.addEventListener('scroll',()=>{tipEl.hidden=true},true);
+
+boot();
+</script>
+
+</body></html>
