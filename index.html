@@ -360,7 +360,7 @@ const fmtDY=d=>d?`${d.getDate()} ${MES[d.getMonth()]} ${d.getFullYear()}`:'—';
 const relD=d=>{const n=daysBetween(TODAY,d);if(n===0)return'hoy';if(n===1)return'mañana';if(n===-1)return'ayer';return n>0?`en ${n} d`:`hace ${-n} d`};
 const relT=d=>{const m=(NOW-d)/6e4;if(m<60)return`hace ${Math.max(1,Math.round(m))} min`;if(m<1440)return`hace ${Math.round(m/60)} h`;return`hace ${Math.round(m/1440)} d`};
 const pct=(a,b)=>b?Math.round(a/b*100):0;
-const monthKey=d=>d.getFullYear()*12+d.getMonth();
+const monthKey=d=>d?d.getFullYear()*12+d.getMonth():null;
 function lastMonths(n,fwd=0){const r=[];for(let i=n-1;i>=-fwd;i--){const d=new Date(TODAY.getFullYear(),TODAY.getMonth()-i,1);r.push({k:monthKey(d),l:MES[d.getMonth()],d})}return r}
 
 /* ---------- configuración ---------- */
