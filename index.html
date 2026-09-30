@@ -369,7 +369,7 @@ const CFG_DEFAULT={mql:50,sla:24,slaAlert:48,bantMin:3,bantAB:true,vig:15,cad1:3
   prob:{'Lead':5,'MQL':15,'SQL-Prospección':30,'SQL-Cotización':50,'SQL-Negociación':70,'Cerrada-Ganada':100,'Cerrada-Perdida':0},
   gastoUmbral:1500,budget:{'Inversión publicitaria':7500,'Software y SaaS':1600,'Freelancers y proveedores':9000,'Operación y oficina':3200,'Viáticos y movilidad':800,'Eventos y capacitación':1500},
   agents:{},showTest:true,
-  notion:{opps:'https://app.notion.com/p/4fbbc1ba06b4412390dc15a6d517bcfa',cuentas:'https://app.notion.com/p/115ca7d660e94939932e4d37bc78cb17',contactos:'https://app.notion.com/p/faae1c343d274aa98866211b46d52fb4',propuestas:'https://app.notion.com/p/67aa5d2461a84cedaaf11ca1e554dcff',facturacion:'https://app.notion.com/p/59bfb0dbdaa64bb2bfa52f7311744d62',proyectos:'https://app.notion.com/p/0a9d5846a34643c584cfd2407aef28fb',tareas:'https://app.notion.com/p/120387a7daa544a8a99474ae4b4c6bdc',reuniones:'https://app.notion.com/p/f04f9a3d48df4cb3b268ccf75a11c0e0',gastos:''}};
+  notion:{consultas:'https://app.notion.com/p/139a91687c2c45948490130cb203c946',opps:'https://app.notion.com/p/4fbbc1ba06b4412390dc15a6d517bcfa',cuentas:'https://app.notion.com/p/115ca7d660e94939932e4d37bc78cb17',contactos:'https://app.notion.com/p/faae1c343d274aa98866211b46d52fb4',propuestas:'https://app.notion.com/p/67aa5d2461a84cedaaf11ca1e554dcff',facturacion:'https://app.notion.com/p/59bfb0dbdaa64bb2bfa52f7311744d62',proyectos:'https://app.notion.com/p/0a9d5846a34643c584cfd2407aef28fb',tareas:'https://app.notion.com/p/120387a7daa544a8a99474ae4b4c6bdc',reuniones:'https://app.notion.com/p/f04f9a3d48df4cb3b268ccf75a11c0e0',gastos:''}};
 const NOTION_BASES=[['opps','Oportunidades'],['cuentas','Cuentas'],['contactos','Contactos'],['propuestas','Propuestas y cotizaciones'],['reuniones','Reuniones y actas'],['facturacion','Facturación y cobranzas'],['proyectos','Proyectos'],['tareas','Tareas'],['gastos','Gastos']];
 let CFG=JSON.parse(JSON.stringify(CFG_DEFAULT));
 function mergeCfg(p){const d=JSON.parse(JSON.stringify(CFG_DEFAULT));CFG={...d,...p,prob:{...d.prob,...(p.prob||{})},budget:{...d.budget,...(p.budget||{})},agents:{...(p.agents||{})},notion:{...d.notion,...(p.notion||{})}};AGENTS.forEach(a=>{if(CFG.agents[a.k]===undefined)CFG.agents[a.k]=true})}
@@ -705,7 +705,7 @@ function navHTML(){
   return VIEWS.map(([k,l])=>`${k==='config'?'<div class="navsep"></div>':''}<button class="navbtn" data-act="nav" data-id="${k}" ${S.view===k?'aria-current="page"':''}><span>${l}</span><span class="cnt mono ${alert[k]&&cnt[k]?'alert':''}">${cnt[k]}</span></button>`).join('');
 }
 function head(eyebrow,title,right=''){
-  const v=S.view,nk={pipeline:'opps',cuentas:'cuentas',contactos:'contactos',propuestas:'propuestas',facturacion:'facturacion',proyectos:'proyectos',gastos:'gastos'}[v];
+  const v=S.view,nk={consultas:'consultas',pipeline:'opps',cuentas:'cuentas',contactos:'contactos',propuestas:'propuestas',facturacion:'facturacion',proyectos:'proyectos',gastos:'gastos'}[v];
   if(DASH&&nk&&CFG.notion[nk])right=`<div class="headr">${right}${nBtn(null,nk,'Abrir base en Notion','btn')}</div>`;
   const tabs=HAS_REPORT.includes(v)?`<div class="tabs" role="tablist"><button class="tab" role="tab" data-act="tab" data-id="op" aria-selected="${tabOf(v)==='op'}">Operación</button><button class="tab" role="tab" data-act="tab" data-id="rep" aria-selected="${tabOf(v)==='rep'}">Reporte</button></div>`:'';
   return `<header class="pagehead"><div><p class="eyebrow">${eyebrow}</p><h1>${title}</h1></div>${right}</header>${tabs}`;
