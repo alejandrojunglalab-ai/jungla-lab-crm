@@ -694,6 +694,7 @@ const HAS_REPORT=['pipeline','cuentas','contactos','propuestas','facturacion','p
 const S={view:'dashboard',tab:{},q:{pipe:'',acc:'',con:'',prop:'',gas:''},f:{owner:'',cur:'',sector:'',size:'',estado:'',fuente:'',rol:'',allVers:false,inv:'',gcat:'',gest:'',gmes:'',gtipo:''},drawer:null,hl:null};
 try{const h=location.hash.slice(1);const [v,t]=h.split('-');if(VIEWS.some(x=>x[0]===v)){S.view=v;if(t==='reporte')S.tab[v]='rep'}}catch(e){}
 const tabOf=v=>S.tab[v]||'op';
+window.addEventListener('hashchange',()=>{try{const [v,t]=location.hash.slice(1).split('-');if(VIEWS.some(x=>x[0]===v)&&(v!==S.view||(t==='rep')!==(tabOf(v)==='rep'))){S.view=v;S.tab[v]=t==='reporte'?'rep':'op';render()}}catch(e){}});
 
 function navHTML(){
   const cnt={pipeline:opps.filter(o=>!isClosed(o)).length,cuentas:accounts.length,contactos:contacts.length,
@@ -723,7 +724,7 @@ function vDashboard(){
   const moraN=invoices.filter(i=>mora(i)>0).length,riskN=projects.filter(p=>projFlags(p).length).length;
   const over=GCATS.filter(c=>sum(liveG().filter(g=>g.categoria===c&&inMonth(g.fecha)),gPEN)>(CFG.budget[c]||0));
   const emptyDb=MODE==='cloud'&&!accounts.length?`<section class="panel empty-state"><h2>La base está vacía</h2><p class="note">Todavía no hay cuentas registradas. Crea la primera y desde su ficha agrega contactos y oportunidades.</p>${W('<button class="btn" data-act="newAcc">+ Nueva cuenta</button>')}</section>`:'';
-  return `${head('Funnel Growth Marketing &amp; IA · 5 fases · 9 agentes','Dashboard general',`<p class="meta mono">Reflejo de Notion · corte ${fmtDY(TODAY)} · TC referencial S/ ${CFG.fx.toFixed(2)} por US$</p>`)}${emptyDb}
+  return `${head('Funnel Growth Marketing &amp; IA · 5 fases · 9 agentes','Dashboard general',`<p class="meta mono">${MODE==='live'?'En vivo desde Supabase':'Reflejo de Notion'} · corte ${fmtDY(TODAY)} · TC referencial S/ ${CFG.fx.toFixed(2)} por US$</p>`)}${emptyDb}
   <section class="kpis" aria-label="Indicadores">${order.map(k=>K[k]).map(k=>`<div class="kpi"><span class="lab">${k.l}${k.sim?'<span class="sim">SIM</span>':''}</span><span class="val">${k.v}</span><span class="foot">${k.f}</span></div>`).join('')}</section>
   <div class="grid2">
     <section class="panel"><div class="panel-h"><h2>Funnel por etapa</h2><p>Cantidad y valor bruto (equivalente en S/)</p></div>
@@ -777,7 +778,7 @@ function oppCard(o){
   </article>`;
 }
 function vPipeline(){
-  const h=head('Reflejo de Notion · solo lectura','Pipeline',`<div class="headr"><div class="rules"><span class="rule">MQL: score ≥ ${CFG.mql}</span><span class="rule">Cotización: BANT ${CFG.bantMin}/4${CFG.bantAB?' con B o A':''}</span><span class="rule">Pérdida: motivo de lista cerrada</span></div>${W('<button class="btn" data-act="newOpp">+ Nueva oportunidad</button>')}</div>`);
+  const h=head((MODE==='live'?'En vivo · solo lectura':'Reflejo de Notion · solo lectura'),'Pipeline',`<div class="headr"><div class="rules"><span class="rule">MQL: score ≥ ${CFG.mql}</span><span class="rule">Cotización: BANT ${CFG.bantMin}/4${CFG.bantAB?' con B o A':''}</span><span class="rule">Pérdida: motivo de lista cerrada</span></div>${W('<button class="btn" data-act="newOpp">+ Nueva oportunidad</button>')}</div>`);
   if(tabOf('pipeline')==='rep')return h+rPipeline();
   const list=opps.filter(matchPipe);
   return `${h}<div class="filters">
@@ -1269,7 +1270,7 @@ const W=h=>(RO||DASH)?'':h;
 const nUrl=(o,key)=>(o&&o.notionUrl)||CFG.notion[key]||'';
 function nBtn(o,key,label='Abrir en Notion',cls='btn sm ghost'){const u=nUrl(o,key);if(!/^https:\/\//.test(u))return `<span class="chip mute" title="Configura el enlace en Configuración › Enlaces a Notion">Sin enlace a Notion</span>`;const page=o&&o.notionUrl;return `<a class="${cls}" href="${esc(u)}" target="_blank" rel="noopener" title="${page?'Abre la página de este registro en Notion':'Abre la base en Notion; con la sincronización conectada abrirá la página de este registro'}"><i aria-hidden="true">↗</i> ${label}</a>`}
 const notionLink=o=>o&&o.notionUrl?`<a class="btn sm ghost" href="${esc(o.notionUrl)}" target="_blank" rel="noopener">Abrir en Notion</a>`:`<span class="chip mute" title="En la versión conectada abre la página de Notion">Se edita en Notion</span>`;
-const isLoading=()=>MODE==='loading'||(MODE==='cloud'&&loaded.size<COLS.length+2);
+const isLoading=()=>MODE==='loading'||(MODE==='live'&&!loaded.has('live')&&!liveErr)||(MODE==='cloud'&&loaded.size<COLS.length+2);
 const chains={};
 async function writeOnce(fn){try{return await fn()}catch(e){if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,400+Math.random()*600));return fn()}throw e}}
 function onWriteErr(e){
@@ -1299,6 +1300,7 @@ function updSave(){
   const el=$('#savestate');if(!el)return;
   let cls='',b='',t='';
   if(MODE==='loading'){b='CONECTANDO';t='Abriendo la base compartida…'}
+  else if(MODE==='live'){cls=liveErr?'err':'ok';b=liveErr?'SIN CONEXIÓN':'EN VIVO · SUPABASE';t=(liveErr||'Solo lectura. Se actualiza solo cada 20 s'+(liveAt?` · última lectura ${pad(liveAt.getHours())}:${pad(liveAt.getMinutes())}`:''))+' · <button id="jl-logout" class="link" type="button">Cerrar sesión</button>'}
   else if(MODE==='demo'){b='MODO DEMO';t='Datos de prueba en memoria. Los cambios no se guardan al recargar.'}
   else if(RO||DASH){cls='ok';b='REFLEJO DE NOTION';t='Solo lectura. Los datos se editan en Notion; aquí se sincronizarán cada 15 min en la versión conectada.'}
   else if(pending){cls='busy';b='GUARDANDO…';t=`${pending} cambio${pending>1?'s':''} en curso`}
@@ -1317,6 +1319,7 @@ function subscribeAll(){
 }
 async function boot(){
   updSave();render();
+  if(!/[?&]demo\b/.test(location.search)){if(getSess()){startLive()}else{showLogin()}return}
   let db=null;
   try{if(window.claude&&typeof window.claude.use==='function')db=await window.claude.use('db')}catch(e){db=null}
   if(!db){MODE='demo';try{const x=localStorage.getItem('jl-crm-cfg');if(x)mergeCfg(JSON.parse(x))}catch(e){}genDemo();render();return}
@@ -1324,6 +1327,63 @@ async function boot(){
   try{const u=await window.claude.use('user');if(u&&typeof u.can==='function'){const c=await u.can('data.write');if(c===false)RO=true}}catch(e){}
   render();subscribeAll();
 }
+
+/* ---------- modo LIVE: lectura desde Supabase (solo lectura, con login) ---------- */
+const SB={url:'https://srhwdushsgfxlgatgikw.supabase.co',key:'sb_publishable_arXxbcVZnAHqvIbeQ6ylgQ_sj_8Pm-a',ls:'jl-crm-session'};
+let liveOK=false,liveErr='',liveAt=null,liveTimer=null;
+const sbH=tok=>({apikey:SB.key,Authorization:'Bearer '+(tok||SB.key),'Content-Type':'application/json'});
+const getSess=()=>{try{return JSON.parse(localStorage.getItem(SB.ls)||'null')}catch(e){return null}};
+const setSess=x=>{try{x?localStorage.setItem(SB.ls,JSON.stringify(x)):localStorage.removeItem(SB.ls)}catch(e){}};
+function packSess(j){return {access_token:j.access_token,refresh_token:j.refresh_token,exp:Date.now()+(j.expires_in||3600)*1000-60000,email:(j.user&&j.user.email)||''}}
+async function sbLogin(email,pw){
+  const r=await fetch(SB.url+'/auth/v1/token?grant_type=password',{method:'POST',headers:sbH(),body:JSON.stringify({email,password:pw})});
+  const j=await r.json().catch(()=>({}));if(!r.ok||!j.access_token)throw new Error('Correo o contraseña incorrectos.');
+  const s=packSess(j);setSess(s);return s}
+async function sbToken(){
+  let s=getSess();if(!s)return null;
+  if(Date.now()<s.exp)return s.access_token;
+  try{const r=await fetch(SB.url+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:sbH(),body:JSON.stringify({refresh_token:s.refresh_token})});
+    const j=await r.json();if(!r.ok||!j.access_token)throw 0;s=packSess(j);s.email=s.email||getSess().email;setSess(s);return s.access_token}catch(e){setSess(null);return null}}
+async function sbGet(tab,tok){
+  const r=await fetch(SB.url+'/rest/v1/'+tab+'?select=*&order=created_at.desc&limit=1000',{headers:sbH(tok)});
+  if(r.status===401||r.status===403)throw Object.assign(new Error('auth'),{auth:true});
+  if(!r.ok)throw new Error(tab+' '+r.status);return r.json()}
+const D=v=>v?new Date(v):null;
+function mapLive(A,C,O){
+  const accs=A.map(a=>{const i=SIZES.indexOf(a.size);return {id:a.id,name:a.name||'(sin nombre)',sector:a.sector||'Sin sector',size:a.size||SIZES[0],sizeIdx:i<0?0:i,domain:a.domain||'',test:!!a.is_test}});
+  const ab=Object.fromEntries(accs.map(a=>[a.id,a]));
+  const cons=C.map(c=>({id:c.id,accountId:c.account_id,name:c.name||'(sin nombre)',cargo:c.cargo||'',email:c.email||'',phone:c.phone||'',linkedin:c.linkedin||'',fuente:c.fuente||'Web-Inbound',rol:c.rol||'Usuario',canal:c.canal||'Email',estado:c.estado||'Nuevo',test:!!c.is_test,createdAt:D(c.created_at)}));
+  const cb=Object.fromEntries(cons.map(c=>[c.id,c]));
+  const ops=O.map(o=>{const a=ab[o.account_id],c=cb[o.contact_id];const st=STG[o.stage]?o.stage:'Lead';
+    return {id:o.id,accountId:o.account_id,contactId:o.contact_id,name:((c&&c.name)||(a&&a.name)||'Oportunidad')+' · '+(o.source||'Web'),value:+o.amount||0,currency:o.currency||'PEN',services:[],stage:st,
+      bant:{A:!!o.bant_authority,B:!!o.bant_budget,N:!!o.bant_need,T:!!o.bant_timeline},source:o.source||'Web-Inbound',lossReason:null,lostFrom:null,created:D(o.created_at)||new Date(),closeEst:null,closedAt:D(o.closed_at),
+      nextStep:'',nextStepDate:null,owner:o.owner||'Sin asignar',mqlAt:st==='Lead'?null:(D(o.created_at)||new Date()),firstContactAt:null,log:[],test:!!o.is_test}});
+  return {accs,cons,ops}}
+async function loadLive(){
+  const tok=await sbToken();if(!tok)throw Object.assign(new Error('auth'),{auth:true});
+  const [A,C,O]=await Promise.all([sbGet('accounts',tok),sbGet('contacts',tok),sbGet('opportunities',tok)]);
+  const m=mapLive(A,C,O);
+  Object.values(ARR).forEach(a=>a.length=0);
+  accounts.push(...m.accs);contacts.push(...m.cons);opps.push(...m.ops);
+  liveOK=true;liveErr='';liveAt=new Date();loaded.add('live')}
+function showLogin(msg){
+  let el=document.getElementById('jl-login');
+  if(!el){el=document.createElement('div');el.id='jl-login';
+    el.style.cssText='position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px';
+    el.innerHTML='<form id="jl-login-f" style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;width:100%;max-width:360px;display:grid;gap:12px;color:var(--ink)"><h2 style="margin:0">CRM · Jungla Lab</h2><p style="margin:0;color:var(--ink2);font-size:14px">Ingresa para ver los contactos y oportunidades en vivo.</p><label style="display:grid;gap:4px;font-size:13px">Correo<input id="jl-em" type="email" autocomplete="username" required style="padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)"></label><label style="display:grid;gap:4px;font-size:13px">Contraseña<input id="jl-pw" type="password" autocomplete="current-password" required style="padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)"></label><div id="jl-lmsg" role="alert" style="color:#b3261e;font-size:13px;min-height:16px"></div><button class="btn" type="submit">Ingresar</button></form>';
+    document.body.appendChild(el);
+    el.querySelector('form').addEventListener('submit',async ev=>{ev.preventDefault();const b=el.querySelector('button');b.disabled=true;
+      try{await sbLogin($('#jl-em').value.trim(),$('#jl-pw').value);el.remove();await startLive()}catch(e){$('#jl-lmsg').textContent=e.message||'No se pudo ingresar.';b.disabled=false}})}
+  $('#jl-lmsg').textContent=msg||''}
+async function refreshLive(){
+  try{await loadLive();schedule()}catch(e){if(e.auth){clearInterval(liveTimer);setSess(null);MODE='loading';updSave();showLogin('Tu sesión expiró. Ingresa de nuevo.')}else{liveErr='Sin conexión con Supabase';updSave()}}
+  updSave()}
+async function startLive(){
+  MODE='live';updSave();render();
+  try{await loadLive()}catch(e){if(e.auth){MODE='loading';showLogin(getSess()?'Tu sesión expiró. Ingresa de nuevo.':'');return}liveErr='No se pudo leer Supabase'}
+  render();updSave();clearInterval(liveTimer);liveTimer=setInterval(refreshLive,20000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshLive()})}
+document.addEventListener('click',e=>{if(e.target&&e.target.id==='jl-logout'){setSess(null);clearInterval(liveTimer);location.reload()}});
 window.__exportSeed=()=>{const out={};COLS.forEach(c=>out[c]=ARR[c].map(ser));return out};
 
 /* ---------- formularios: crear y editar ---------- */
