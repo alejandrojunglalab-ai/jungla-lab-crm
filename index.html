@@ -425,7 +425,7 @@ const NEXT={'Lead':['Enviar caso de éxito del sector','Invitar a webinar de IA 
 const COMPROB=['Factura','Recibo por honorarios','Boleta','Invoice exterior'];
 
 /* ---------- datos simulados ---------- */
-const accounts=[],contacts=[],opps=[],proposals=[],invoices=[],projects=[],tasks=[],meetings=[],gastos=[],feedUser=[];
+const consultas=[],accounts=[],contacts=[],opps=[],proposals=[],invoices=[],projects=[],tasks=[],meetings=[],gastos=[],feedUser=[];
 function acc(id){return accounts.find(x=>x.id===id)}
 function con(id){return contacts.find(x=>x.id===id)}
 function opp(id){return opps.find(x=>x.id===id)}
@@ -689,7 +689,7 @@ const miniTable=(head,rows)=>`<div class="tblwrap"><table class="tbl"><thead><tr
 function groupBy(a,f){const m=new Map();a.forEach(x=>{const k=f(x);if(!m.has(k))m.set(k,[]);m.get(k).push(x)});return m}
 
 /* ---------- estado de la UI ---------- */
-const VIEWS=[['dashboard','Dashboard'],['pipeline','Pipeline'],['cuentas','Cuentas'],['contactos','Contactos'],['propuestas','Propuestas'],['facturacion','Facturación'],['proyectos','Proyectos'],['gastos','Gastos'],['config','Configuración']];
+const VIEWS=[['dashboard','Dashboard'],['consultas','Consultas'],['pipeline','Pipeline'],['cuentas','Cuentas'],['contactos','Contactos'],['propuestas','Propuestas'],['facturacion','Facturación'],['proyectos','Proyectos'],['gastos','Gastos'],['config','Configuración']];
 const HAS_REPORT=['pipeline','cuentas','contactos','propuestas','facturacion','proyectos','gastos'];
 const S={view:'dashboard',tab:{},q:{pipe:'',acc:'',con:'',prop:'',gas:''},f:{owner:'',cur:'',sector:'',size:'',estado:'',fuente:'',rol:'',allVers:false,inv:'',gcat:'',gest:'',gmes:'',gtipo:''},drawer:null,hl:null};
 try{const h=location.hash.slice(1);const [v,t]=h.split('-');if(VIEWS.some(x=>x[0]===v)){S.view=v;if(t==='reporte')S.tab[v]='rep'}}catch(e){}
@@ -697,7 +697,7 @@ const tabOf=v=>S.tab[v]||'op';
 window.addEventListener('hashchange',()=>{try{const [v,t]=location.hash.slice(1).split('-');if(VIEWS.some(x=>x[0]===v)&&(v!==S.view||(t==='rep')!==(tabOf(v)==='rep'))){S.view=v;S.tab[v]=t==='reporte'?'rep':'op';render()}}catch(e){}});
 
 function navHTML(){
-  const cnt={pipeline:opps.filter(o=>!isClosed(o)).length,cuentas:accounts.length,contactos:contacts.length,
+  const cnt={consultas:consultas.filter(x=>x.estado==='Nuevo').length,pipeline:opps.filter(o=>!isClosed(o)).length,cuentas:accounts.length,contactos:contacts.length,
     propuestas:proposals.filter(p=>['Enviada','Vigente','Borrador'].includes(p.estado)).length,
     facturacion:invoices.filter(i=>mora(i)>0).length,proyectos:projects.length,dashboard:checkpoints().length,
     gastos:gastos.filter(g=>gState(g)==='Por aprobar').length,config:''};
@@ -845,6 +845,33 @@ function rCuentas(){
 }
 
 /* ---------- Contactos ---------- */
+
+const CONS_EST=['Nuevo','Seguimiento','Interesado','No Interesado'];
+const CONS_CLS={'Nuevo':'info','Seguimiento':'warn','Interesado':'ok','No Interesado':'mute'};
+function vConsultas(){
+  const h=head('Prebase · filtro antes de Contactos y Cuentas','Consultas');
+  const q=(S.q.cons||'').trim().toLowerCase(),fe=S.f.cest||'';
+  const list=consultas.filter(c=>(!q||((c.nombre||'')+' '+(c.email||'')+' '+(c.empresa||'')+' '+(c.phone||'')).toLowerCase().includes(q))&&(!fe||c.estado===fe));
+  const n=e=>consultas.filter(c=>c.estado===e).length;
+  const live=MODE==='live';
+  const note=live?'Todo registro de las landings entra aquí primero. Contáctalo, cambia su estado y, al marcarlo <b>Interesado</b>, se crea automáticamente su Cuenta, Contacto y Oportunidad (y pasa a Notion).':'Las consultas solo existen en modo en vivo (Supabase).';
+  return `${h}<p class="note">${note}</p>
+  <div class="filters"><input type="search" id="q-cons" data-qcons="1" placeholder="Buscar nombre, empresa, email o teléfono" value="${esc(S.q.cons||'')}" aria-label="Buscar consulta">
+   <select id="f-cest" data-fcons="1" aria-label="Estado"><option value="">Todos los estados (${consultas.length})</option>${CONS_EST.map(x=>`<option value="${x}" ${fe===x?'selected':''}>${x} (${n(x)})</option>`).join('')}</select>
+   <span class="count">${list.length} consultas</span></div>
+  <div class="tblwrap"><table class="tbl"><thead><tr><th>Fecha</th><th>Nombre</th><th>Empresa</th><th>Email</th><th>Teléfono</th><th>Landing</th><th>Servicio</th><th>Estado</th></tr></thead><tbody>
+  ${list.map(c=>`<tr><td class="mono sm nowrap">${c.createdAt?fmtD(c.createdAt):''}</td><td class="nm nowrap">${esc(c.nombre||'(sin nombre)')}${c.test?' <span class="test">PRUEBA</span>':''}</td><td>${esc(c.empresa||'—')}</td><td class="mono sm">${esc(c.email||'')}</td><td class="mono sm">${esc(c.phone||'')}</td><td class="sm">${esc(c.landing||'')}</td><td class="sm">${esc(c.servicio||'')}</td><td>${live&&c.estado!=='Interesado'?`<select class="tsel" data-cons="${c.id}" aria-label="Estado de la consulta">${CONS_EST.map(x=>`<option ${x===c.estado?'selected':''}>${x}</option>`).join('')}</select>`:`<span class="chip ${CONS_CLS[c.estado]||'mute'}">${c.estado}${c.contactId?' · en Contactos':''}</span>`}</td></tr>`).join('')||'<tr><td colspan="8" class="sm">Sin consultas.</td></tr>'}
+  </tbody></table></div>`;
+}
+document.addEventListener('input',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.qcons){S.q.cons=t.value;const pos=t.selectionStart;render();const i=$('#q-cons');if(i){i.focus();try{i.setSelectionRange(pos,pos)}catch(_){}}}});
+document.addEventListener('change',async e=>{const t=e.target;if(!t||!t.dataset)return;
+  if(t.dataset.fcons){S.f.cest=t.value;render();return}
+  if(t.dataset.cons){const id=t.dataset.cons,est=t.value;t.disabled=true;
+    try{const tok=await sbToken();if(!tok)throw Object.assign(new Error('auth'),{auth:true});
+      const r=await fetch(SB.url+'/rest/v1/consultas?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{...sbH(tok),Prefer:'return=minimal'},body:JSON.stringify({estado:est,ultimo_contacto:new Date().toISOString()})});
+      if(!r.ok)throw new Error('http '+r.status);
+      toast(est==='Interesado'?'Consulta calificada: ya está en Contactos, Cuentas y Pipeline':'Estado actualizado: '+est);
+      await refreshLive()}catch(err){toast('No se pudo guardar el estado. Reintenta.');await refreshLive()}}});
 function vContactos(){
   const h=head('Personas de contacto por cuenta','Contactos',W('<button class="btn" data-act="newCon">+ Nuevo contacto</button>'));
   if(tabOf('contactos')==='rep')return h+rContactos();
@@ -1095,7 +1122,7 @@ function vConfig(){
    ${panel('Integraciones','Previstas para la versión productiva',`<div>${[['Notion','Base de datos de cuentas, contactos y oportunidades'],['n8n','Orquestación de los 9 agentes'],['HubSpot / Active Campaign','Nurturing y email marketing'],['Google Ads · Meta Ads','Inversión real para CPL'],['GA4 / Looker Studio','Tráfico y reportes']].map(([n,d])=>`<div class="integ"><div><b>${n}</b><div class="note">${d}</div></div><span class="chip mute">No conectado</span></div>`).join('')}</div>`)}
   </div>`;
 }
-const VIEWFN={dashboard:vDashboard,pipeline:vPipeline,cuentas:vCuentas,contactos:vContactos,propuestas:vPropuestas,facturacion:vFacturacion,proyectos:vProyectos,gastos:vGastos,config:vConfig};
+const VIEWFN={dashboard:vDashboard,consultas:vConsultas,pipeline:vPipeline,cuentas:vCuentas,contactos:vContactos,propuestas:vPropuestas,facturacion:vFacturacion,proyectos:vProyectos,gastos:vGastos,config:vConfig};
 
 /* ---------- drawers ---------- */
 function apprLine(d){const ap=approverFor(d);return d<=CFG.disc1?`Aprueba: <b>${ap.who}</b> · se puede enviar directo.`:`Aprueba: <b>${ap.who}</b> · el borrador queda bloqueado hasta la aprobación.`}
@@ -1361,10 +1388,10 @@ function mapLive(A,C,O){
   return {accs,cons,ops}}
 async function loadLive(){
   const tok=await sbToken();if(!tok)throw Object.assign(new Error('auth'),{auth:true});
-  const [A,C,O]=await Promise.all([sbGet('accounts',tok),sbGet('contacts',tok),sbGet('opportunities',tok)]);
+  const [A,C,O,Q]=await Promise.all([sbGet('accounts',tok),sbGet('contacts',tok),sbGet('opportunities',tok),sbGet('consultas',tok)]);
   const m=mapLive(A,C,O);
-  Object.values(ARR).forEach(a=>a.length=0);
-  accounts.push(...m.accs);contacts.push(...m.cons);opps.push(...m.ops);
+  Object.values(ARR).forEach(a=>a.length=0);consultas.length=0;
+  consultas.push(...Q.map(q=>({id:q.id,nombre:q.nombre,email:q.email,phone:q.phone,empresa:q.empresa,landing:q.landing,servicio:q.servicio,estado:q.estado,contactId:q.contact_id,test:!!q.is_test,createdAt:D(q.created_at)})));accounts.push(...m.accs);contacts.push(...m.cons);opps.push(...m.ops);
   liveOK=true;liveErr='';liveAt=new Date();loaded.add('live')}
 function showLogin(msg){
   let el=document.getElementById('jl-login');
